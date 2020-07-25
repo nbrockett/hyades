@@ -5,6 +5,10 @@ add_library(Hyades SHARED
 
 set_target_properties(Hyades PROPERTIES VERSION ${PROJECT_VERSION})
 
+# set include directories
+target_include_directories(Hyades PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include)
+
+
 include(GNUInstallDirs)
 
 install(TARGETS Hyades
