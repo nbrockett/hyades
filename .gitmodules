@@ -1,0 +1,3 @@
+[submodule "Hyades/libs/spdlog"]
+	path = Hyades/libs/spdlog
+	url = git@github.com:gabime/spdlog.git
