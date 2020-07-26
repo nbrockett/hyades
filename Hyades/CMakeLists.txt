@@ -10,6 +10,9 @@ set_target_properties(Hyades PROPERTIES VERSION ${PROJECT_VERSION})
 target_include_directories(Hyades PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include)
 target_include_directories(Hyades PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/libs/spdlog/include)
 
+# precompile header
+target_precompile_headers(Hyades PRIVATE src/HyadesPCH.hpp)
+
 include(GNUInstallDirs)
 
 install(TARGETS Hyades
