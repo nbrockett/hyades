@@ -1,3 +1,6 @@
 [submodule "Hyades/libs/spdlog"]
 	path = Hyades/libs/spdlog
 	url = git@github.com:gabime/spdlog.git
+[submodule "Hyades/libs/glfw"]
+	path = Hyades/libs/glfw
+	url = git@github.com:glfw/glfw.git
