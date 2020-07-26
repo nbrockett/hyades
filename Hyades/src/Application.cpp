@@ -16,8 +16,8 @@ namespace Hyades
             Hyades::Logger::s_logger->error("ERROR: Failed to create GLFW window");
         }
 
-        // TODO: fix this
-        // glfwSetWindowCloseCallback(m_window, onWindowClose);
+        // static member function as callback
+        glfwSetWindowCloseCallback(m_window, onWindowClose);
 
         m_running = true;
 
@@ -34,8 +34,8 @@ namespace Hyades
     {
         
 
-        while (m_running)
-        {
+        // while (m_running)
+        // {
             while (!glfwWindowShouldClose(m_window))
             {
                 // render(m_window);
@@ -44,14 +44,16 @@ namespace Hyades
                 glfwPollEvents();
             }
 
-        }
+        // }
         
 
     }
 
     void Application::onWindowClose(GLFWwindow* window) 
     {
+        Hyades::Logger::s_logger->info("Closing Window...");
         glfwSetWindowShouldClose(window, GLFW_TRUE);
+        // m_running = false;
     }
 
 } // namespace Hyades
