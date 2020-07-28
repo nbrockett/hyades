@@ -5,6 +5,11 @@ namespace Hyades
 {
     Application::Application(/* args */)
     {
+        
+        // initialise logging
+        Hyades::Logger::init();
+    
+        
         if (!glfwInit())
         {
             Hyades::Logger::s_logger->error("ERROR: Failed to initialize GLFW");
