@@ -1,7 +1,8 @@
 ### Create Hyades Library ###
 add_library(Hyades SHARED
             src/Application.cpp
-            src/Logger.cpp)
+            src/Logger.cpp
+            src/Window.cpp)
 
 
 set_target_properties(Hyades PROPERTIES VERSION ${PROJECT_VERSION})

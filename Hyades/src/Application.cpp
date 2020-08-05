@@ -1,55 +1,32 @@
 #include "Application.hpp"
 #include "Logger.hpp"
+#include "Window.hpp"
 
 namespace Hyades
 {
-    Application::Application(/* args */)
-    {
-        
-        // initialise logging
-        Hyades::Logger::init();
+    // Application::Application(const std::string& name, const int& width, const int& height) : m_running(true), m_window(std::make_unique<Window>(Window(name, width, height))) 
     
-        
-        if (!glfwInit())
-        {
-            Hyades::Logger::s_logger->error("ERROR: Failed to initialize GLFW");
-        }
-
-        m_window = glfwCreateWindow(640, 480, "Hyades", NULL, NULL);
-        if (!m_window)
-        {
-            Hyades::Logger::s_logger->error("ERROR: Failed to create GLFW window");
-        }
-
-        // static member function as callback
-        glfwSetWindowCloseCallback(m_window, onWindowClose);
-
-        m_running = true;
-
+    Application::Application() : m_running(true), m_window(std::make_unique<Window>("yep", 800, 600))
+    {   
+        Hyades::Logger::s_logger->info("Initializing Hyades Application");
     }
+
 
     Application::~Application()
     {
-        Hyades::Logger::s_logger->info("Terminating Application");
-        glfwDestroyWindow(m_window);
-        glfwTerminate();
+        // Hyades::Logger::s_logger->info("Terminating Application");
+        // glfwDestroyWindow(m_window);
+        // glfwTerminate();
     }
 
     void Application::run() 
     {
         
-
-        // while (m_running)
-        // {
-            while (!glfwWindowShouldClose(m_window))
-            {
-                // render(m_window);
-            
-                glfwSwapBuffers(m_window);
-                glfwPollEvents();
-            }
-
-        // }
+        
+        while (m_running)
+        {
+            m_window->onUpdate();
+        }
         
 
     }
@@ -57,7 +34,7 @@ namespace Hyades
     void Application::onWindowClose(GLFWwindow* window) 
     {
         Hyades::Logger::s_logger->info("Closing Window...");
-        glfwSetWindowShouldClose(window, GLFW_TRUE);
+        // glfwSetWindowShouldClose(window, GLFW_TRUE);
         // m_running = false;
     }
 

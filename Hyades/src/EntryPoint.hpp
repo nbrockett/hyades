@@ -1,11 +1,15 @@
 #pragma once
+#include "Logger.hpp"
 
 extern Hyades::Application* Hyades::createApplication();
 
 int main()
 {
+    Hyades::Logger::init();
+    Hyades::Logger::s_logger->info("starting app");
+    
     // create a Hyades instance
-    auto app = Hyades::createApplication();
+    Hyades::Application* app = Hyades::createApplication();
 
     // run the main loop
     app ->run();
