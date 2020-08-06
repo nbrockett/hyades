@@ -7,8 +7,8 @@ namespace Hyades
     class Application
     {
     private:
-        bool m_running;
-        std::unique_ptr<Window> m_window;
+        bool m_running{ false };
+        std::unique_ptr<Window> m_window{ nullptr };
 
     
     public:

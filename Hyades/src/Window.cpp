@@ -2,7 +2,7 @@
 
 namespace Hyades
 {
-    Window::Window(const std::string& title, const int& width, const int& height) : m_title(title), m_width(width), m_height(height)
+    Window::Window(const std::string& title, const int& width, const int& height) : m_title{title}, m_width{width}, m_height{height}
     {   
         if (!glfwInit())
         {

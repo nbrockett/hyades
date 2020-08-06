@@ -11,10 +11,10 @@ namespace Hyades
 
         GLFWwindow* m_window;
 
-        int m_width;
-        int m_height;
+        int m_width{ 800 };
+        int m_height{ 600 };
 
-        std::string m_title;
+        const std::string m_title{ "Hyades Window" };
 
     public:
         Window(const std::string& title, const int& width, const int& height);

@@ -6,7 +6,7 @@ namespace Hyades
 {
     // Application::Application(const std::string& name, const int& width, const int& height) : m_running(true), m_window(std::make_unique<Window>(Window(name, width, height))) 
 
-    Application::Application() : m_running(true), m_window(std::make_unique<Window>("yep", 800, 600))
+    Application::Application() : m_running{true}, m_window{std::make_unique<Window>("yep", 800, 600)}
     {
         Hyades::Logger::s_logger->info("Initializing Hyades Application");
     }
