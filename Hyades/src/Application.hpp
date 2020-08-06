@@ -16,7 +16,7 @@ namespace Hyades
         ~Application();
 
         void run();
-        static void onWindowClose(GLFWwindow* window);
+        static void on_window_close(GLFWwindow* window);
 
     };
 

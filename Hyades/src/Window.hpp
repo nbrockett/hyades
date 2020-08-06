@@ -20,7 +20,7 @@ namespace Hyades
         Window(const std::string& title, const int& width, const int& height);
         ~Window();
 
-        void onUpdate();
+        void on_update();
         
         // getters
         int const& width() const { return m_width; };
@@ -31,7 +31,8 @@ namespace Hyades
         int& height() { return m_height; }
 
         // callbacks
-        static void setWindowSizeCallback(GLFWwindow* window, int width, int height);
+        static void set_window_size_callback(GLFWwindow* window, int width, int height);
+        static void set_window_close_callback(GLFWwindow* window);
 
 
     };

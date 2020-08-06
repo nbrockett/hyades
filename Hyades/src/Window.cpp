@@ -28,7 +28,8 @@ namespace Hyades
 
         // set callback functions
         glfwSetWindowUserPointer(m_window, this);
-        glfwSetWindowSizeCallback(m_window, this->setWindowSizeCallback);
+        glfwSetWindowSizeCallback(m_window, this->set_window_size_callback);
+        glfwSetWindowCloseCallback(m_window, this->set_window_close_callback);
 
     }
     
@@ -37,7 +38,7 @@ namespace Hyades
         glfwDestroyWindow(m_window);
     }
 
-    void Window::onUpdate()
+    void Window::on_update()
     {
         Hyades::Logger::s_logger->critical("Updating!");
         while (!glfwWindowShouldClose(m_window))
@@ -50,7 +51,7 @@ namespace Hyades
         }
     }
 
-    void Window::setWindowSizeCallback(GLFWwindow* window, int width, int height)
+    void Window::set_window_size_callback(GLFWwindow* window, int width, int height)
     {
 
         Hyades::Logger::s_logger->info("changing window size!");
@@ -60,6 +61,14 @@ namespace Hyades
         win->height() = height;
 
 
+    }
+
+    void Window::set_window_close_callback(GLFWwindow* window)
+    {
+        Hyades::Logger::s_logger->info("closing widnow!");
+        Window* win = static_cast<Window*>(glfwGetWindowUserPointer(window));
+
+        
     }
 
 } // namespace Hyades
