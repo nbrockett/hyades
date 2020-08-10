@@ -2,14 +2,14 @@
 
 namespace Hyades
 {
-    Window::Window(const std::string& title, const int& width, const int& height) : m_title{title}, m_width{width}, m_height{height}
+    Window::Window(const std::string& title, const size_t& width, const size_t& height) : m_title{title}, m_width{width}, m_height{height}
     {   
         if (!glfwInit())
         {
             Hyades::Logger::s_logger->error("ERROR: Failed to initialize GLFW");
         }
 
-        m_window = glfwCreateWindow(width, height, title.c_str(), NULL, NULL);
+        m_window = glfwCreateWindow(width, height, title.c_str(), nullptr, nullptr);
         if (!m_window)
         {
             Hyades::Logger::s_logger->error("ERROR: Failed to create GLFW window");
