@@ -31,21 +31,21 @@ namespace Hyades
     class WindowCloseEvent : public Event
     {
     public:
-        WindowCloseEvent() : m_type{EventType::WindowClose}
+        WindowCloseEvent()
         {   }
 
         EventType type() const { return m_type; }
 
-
+        static constexpr EventType m_type = EventType::WindowClose;
     private:
-        EventType m_type;
+        
 
     };
 
     class WindowResizeEvent : public Event
     {
     public:
-        WindowResizeEvent(size_t width, size_t height) : m_width(width), m_height(height), m_type{EventType::WindowResize}
+        WindowResizeEvent(size_t width, size_t height) : m_width(width), m_height(height)
         {   }
 
         size_t const& width() const { return m_width; };
@@ -53,11 +53,11 @@ namespace Hyades
 
         EventType type() const { return m_type; }
 
+        static constexpr EventType m_type = EventType::WindowResize;
+        
     private:
         size_t m_width;
         size_t m_height;
-        EventType m_type;
-
     };
 
 
@@ -66,11 +66,11 @@ namespace Hyades
     public:
         EventHandler() = default;
 
-        
+        // template<typename T>
         void add_handler(std::function<void(const WindowCloseEvent&)> callback_func)
         {
             // [] operator creates key if doesn't exists
-            m_handler_map[EventType::WindowClose].push_back(callback_func);
+            m_handler_map[WindowCloseEvent::m_type].push_back(callback_func);
 
         }
 
