@@ -66,22 +66,30 @@ namespace Hyades
     public:
         EventHandler() = default;
 
-
+        
         void add_handler(std::function<void(const WindowCloseEvent&)> callback_func)
         {
-            m_handler_map.insert(std::make_pair(EventType::WindowClose, callback_func));
+            // [] operator creates key if doesn't exists
+            m_handler_map[EventType::WindowClose].push_back(callback_func);
+
         }
 
         void trigger(const WindowCloseEvent& event)
         {
-            auto event_type = event.type();
-            std::invoke(m_handler_map.at(event_type), event);
+            const auto event_type = event.type();
+
+            if (m_handler_map.contains(event_type)) {
+                for (const auto& handle : m_handler_map.at(event_type))
+                {   
+                    std::invoke(handle, event);
+                }
+            }
 
         }
 
 
     private:
-        std::map<EventType, std::function<void(const WindowCloseEvent&)> > m_handler_map;
+        std::map<EventType, std::vector< std::function<void(const WindowCloseEvent&)> > > m_handler_map;
 
     };
 
