@@ -1,8 +1,10 @@
 #include "Window.hpp"
 
+
 namespace Hyades
 {
-    Window::Window(const std::string& title, const size_t& width, const size_t& height) : m_title{title}, m_width{width}, m_height{height}
+    Window::Window(const std::string& title, const size_t& width, const size_t& height) : 
+    m_title{title}, m_width{width}, m_height{height}
     {   
         if (!glfwInit())
         {
@@ -28,8 +30,9 @@ namespace Hyades
 
         // set callback functions
         glfwSetWindowUserPointer(m_window, this);
-        glfwSetWindowSizeCallback(m_window, this->set_window_size_callback);
-        glfwSetWindowCloseCallback(m_window, this->set_window_close_callback);
+        glfwSetWindowSizeCallback(m_window, this->on_window_resize);
+        glfwSetWindowCloseCallback(m_window, this->on_window_close);
+
 
     }
     
@@ -38,9 +41,14 @@ namespace Hyades
         glfwDestroyWindow(m_window);
     }
 
+    void Window::set_event_handler(const std::shared_ptr<EventHandler> handler)
+    {
+        m_event_handler = handler;
+    }
+
     void Window::on_update()
     {
-        Hyades::Logger::s_logger->critical("Updating!");
+        // Hyades::Logger::s_logger->critical("Updating!");
         while (!glfwWindowShouldClose(m_window))
         {
             // render(m_window);
@@ -51,7 +59,7 @@ namespace Hyades
         }
     }
 
-    void Window::set_window_size_callback(GLFWwindow* window, int width, int height)
+    void Window::on_window_resize(GLFWwindow* window, int width, int height)
     {
 
         Hyades::Logger::s_logger->info("changing window size!");
@@ -63,12 +71,15 @@ namespace Hyades
 
     }
 
-    void Window::set_window_close_callback(GLFWwindow* window)
+    void Window::on_window_close(GLFWwindow* window)
     {
-        Hyades::Logger::s_logger->info("closing widnow!");
+        Hyades::Logger::s_logger->info("closing window!");
         Window* win = static_cast<Window*>(glfwGetWindowUserPointer(window));
 
-        
+        glfwSetWindowShouldClose(window, GLFW_TRUE);
+
+        WindowCloseEvent event;
+        win->m_event_handler->trigger(event);
     }
 
 } // namespace Hyades

@@ -2,6 +2,7 @@
 
 #include "GLFW/glfw3.h"
 #include "HyadesPCH.hpp"
+#include "Event.hpp"
 
 namespace Hyades
 {
@@ -16,9 +17,13 @@ namespace Hyades
 
         const std::string m_title{ "Hyades Window" };
 
+        std::shared_ptr<EventHandler> m_event_handler{ nullptr };
+
     public:
         Window(const std::string& title, const size_t& width, const size_t& height);
         ~Window();
+
+        void set_event_handler(const std::shared_ptr<EventHandler> handler);
 
         void on_update();
         
@@ -31,8 +36,8 @@ namespace Hyades
         size_t& height() { return m_height; }
 
         // callbacks
-        static void set_window_size_callback(GLFWwindow* window, int width, int height);
-        static void set_window_close_callback(GLFWwindow* window);
+        static void on_window_resize(GLFWwindow* window, int width, int height);
+        static void on_window_close(GLFWwindow* window);
 
 
     };
