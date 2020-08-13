@@ -68,7 +68,8 @@ namespace Hyades
         win->width() = width;
         win->height() = height;
 
-
+        WindowResizeEvent event(width, height);
+        win->m_event_handler->trigger(event);
     }
 
     void Window::on_window_close(GLFWwindow* window)

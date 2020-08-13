@@ -19,6 +19,7 @@ namespace Hyades
         void run();
 
         void on_window_close(const WindowCloseEvent& event);
+        void on_window_resize(const WindowResizeEvent& event);
 
     };
 

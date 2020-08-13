@@ -27,7 +27,6 @@ namespace Hyades
     
     };
 
-
     class WindowCloseEvent : public Event
     {
     public:
@@ -66,22 +65,24 @@ namespace Hyades
     public:
         EventHandler() = default;
 
-        // template<typename T>
-        void add_handler(std::function<void(const WindowCloseEvent&)> callback_func)
+        template<typename T>
+        void add_handler(std::function<void(const T&)> callback_func)
         {
-            // [] operator creates key if doesn't exists
-            m_handler_map[WindowCloseEvent::m_type].push_back(callback_func);
-
+            m_handler_map[T::m_type].push_back( callback_func);
         }
 
-        void trigger(const WindowCloseEvent& event)
+        template<typename T>
+        void trigger(const T& event)
         {
             const auto event_type = event.type();
 
             if (m_handler_map.contains(event_type)) {
                 for (const auto& handle : m_handler_map.at(event_type))
                 {   
-                    std::invoke(handle, event);
+                    std::invoke(std::any_cast<std::function<void(const decltype(event)&)>>(handle), event);
+
+
+                    // std::any_cast<std::function<void(const decltype(event)&)> >(handle) (event);
                 }
             }
 
@@ -89,7 +90,9 @@ namespace Hyades
 
 
     private:
-        std::map<EventType, std::vector< std::function<void(const WindowCloseEvent&)> > > m_handler_map;
+        // std::map<EventType, std::vector< std::function<void(const WindowCloseEvent&)> > > m_handler_map;
+        // TODO: Change this to something safer using std::multimap etc.
+        std::map<EventType, std::vector<std::any> > m_handler_map;
 
     };
 
