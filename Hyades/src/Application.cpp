@@ -12,7 +12,9 @@ namespace Hyades
     {
         Hyades::Logger::s_logger->info("Initializing Hyades Application");
 
+        // set window object bindings
         m_window->set_event_handler(m_event_handler);
+        m_window->set_renderer(m_renderer);
 
         // set application event callback functions
         m_event_handler->add_handler<WindowCloseEvent>(std::bind(&Application::on_window_close, this, std::placeholders::_1));
@@ -49,6 +51,8 @@ namespace Hyades
     void Application::on_window_resize(const WindowResizeEvent& event)
     {
         Hyades::Logger::s_logger->info("Resize event triggered..");
+
+        m_renderer.on_window_resize(event.width(), event.height());
     }
 
 

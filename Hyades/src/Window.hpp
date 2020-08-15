@@ -4,6 +4,7 @@
 #include "HyadesPCH.hpp"
 #include "Event.hpp"
 #include "KeyEvent.hpp"
+#include "Renderer/RenderContext.hpp"
 
 namespace Hyades
 {
@@ -19,12 +20,14 @@ namespace Hyades
         const std::string m_title{ "Hyades Window" };
 
         std::shared_ptr<EventHandler> m_event_handler{ nullptr };
+        std::unique_ptr<RenderContext> m_renderer{ nullptr };
 
     public:
         Window(const std::string& title, const size_t& width, const size_t& height);
         ~Window();
 
         void set_event_handler(const std::shared_ptr<EventHandler> handler);
+        void set_renderer(const RenderContext& renderer);
 
         void on_update();
         

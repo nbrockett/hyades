@@ -46,6 +46,11 @@ namespace Hyades
         m_event_handler = handler;
     }
 
+    void Window::set_renderer(const RenderContext& renderer)
+    {
+        m_renderer = std::make_unique<RenderContext>(renderer);
+    }
+
     void Window::on_update()
     {
         // Hyades::Logger::s_logger->critical("Updating!");
