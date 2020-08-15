@@ -3,6 +3,7 @@
 #include "GLFW/glfw3.h"
 #include "HyadesPCH.hpp"
 #include "Event.hpp"
+#include "KeyEvent.hpp"
 
 namespace Hyades
 {
@@ -38,6 +39,7 @@ namespace Hyades
         // callbacks
         static void on_window_resize(GLFWwindow* window, int width, int height);
         static void on_window_close(GLFWwindow* window);
+        static void on_key_press(GLFWwindow* window, int key, int scancode, int action, int mods);
 
 
     };

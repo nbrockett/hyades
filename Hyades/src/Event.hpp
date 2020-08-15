@@ -9,7 +9,9 @@ namespace Hyades
 
     enum class EventType 
     {
-        WindowClose, WindowResize
+        WindowClose, WindowResize,
+        KeyPressed, KeyReleased,
+        MouseButtonPressed, MouseButtonReleased, MouseMoved, MouseScrolled
     };
 
 

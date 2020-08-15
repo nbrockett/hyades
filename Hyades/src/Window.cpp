@@ -32,7 +32,7 @@ namespace Hyades
         glfwSetWindowUserPointer(m_window, this);
         glfwSetWindowSizeCallback(m_window, this->on_window_resize);
         glfwSetWindowCloseCallback(m_window, this->on_window_close);
-
+        glfwSetKeyCallback(m_window, this->on_key_press);
 
     }
     
@@ -81,6 +81,32 @@ namespace Hyades
 
         WindowCloseEvent event;
         win->m_event_handler->trigger(event);
+    }
+
+    void Window::on_key_press(GLFWwindow* window, int key, int scancode, int action, int mods)
+    {
+        
+        Window* win = static_cast<Window*>(glfwGetWindowUserPointer(window));
+
+        switch (action)
+        {
+            case GLFW_PRESS:
+            {
+                auto str_message = std::string("Key ") + std::to_string(key) + std::string(" pressed!");
+                Hyades::Logger::s_logger->info(str_message);
+
+                win->m_event_handler->trigger(KeyPressedEvent(static_cast<KeyCode>(key)));
+                break;
+            }
+            case GLFW_RELEASE:
+            {
+                auto str_message = std::string("Key ") + std::to_string(key) + std::string(" released!");
+                Hyades::Logger::s_logger->info(str_message);
+
+                win->m_event_handler->trigger(KeyReleasedEvent(static_cast<KeyCode>(key)));
+                break;
+            }
+        }
     }
 
 } // namespace Hyades
