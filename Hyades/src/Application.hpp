@@ -2,6 +2,7 @@
 #include "GLFW/glfw3.h"
 #include "Window.hpp"
 #include "Event.hpp"
+#include "Renderer/RenderContext.hpp"
 
 namespace Hyades
 {
@@ -11,7 +12,10 @@ namespace Hyades
         bool m_running{ false };
         std::unique_ptr<Window> m_window{ nullptr };
         std::shared_ptr<EventHandler> m_event_handler{ nullptr };
-    
+
+        RenderContext m_renderer = RenderContext();
+
+
     public:
         Application();
         ~Application();
