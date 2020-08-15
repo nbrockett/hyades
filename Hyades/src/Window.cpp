@@ -106,6 +106,14 @@ namespace Hyades
                 win->m_event_handler->trigger(KeyReleasedEvent(static_cast<KeyCode>(key)));
                 break;
             }
+            case GLFW_REPEAT:
+            {
+                auto str_message = std::string("Key ") + std::to_string(key) + std::string(" repeated!");
+                Hyades::Logger::s_logger->info(str_message);
+
+                win->m_event_handler->trigger(KeyRepeatEvent(static_cast<KeyCode>(key)));
+                break;
+            }
         }
     }
 

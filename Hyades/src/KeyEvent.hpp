@@ -179,6 +179,17 @@ namespace Hyades
         static constexpr EventType m_type = EventType::KeyReleased;        
     };
 
+    class KeyRepeatEvent : public KeyEvent
+    {
+    public:
+
+        KeyRepeatEvent(KeyCode key_code) : KeyEvent(key_code) 
+        {   }
+
+        EventType type() const { return m_type; }
+        static constexpr EventType m_type = EventType::KeyPressed;        
+    };
+
 
 
 } // namespace Hyades
