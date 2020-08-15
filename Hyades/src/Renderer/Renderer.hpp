@@ -12,6 +12,8 @@ namespace Hyades
     public:
         Renderer(/* args */);
         ~Renderer();
+
+        virtual void render() = 0;
     };
 
 
@@ -22,6 +24,9 @@ namespace Hyades
     public:
         VulkanRenderer(/* args */);
         ~VulkanRenderer();
+
+        void render();
+
     };
     
 

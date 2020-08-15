@@ -16,5 +16,10 @@ namespace Hyades
 
     }
 
+    void RenderContext::render()
+    {
+        Logger::s_logger->info("rendering context frame...");
+    }
+
 } // namespace Hyades
 

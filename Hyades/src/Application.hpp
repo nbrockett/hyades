@@ -15,7 +15,6 @@ namespace Hyades
 
         RenderContext m_renderer = RenderContext();
 
-
     public:
         Application();
         ~Application();

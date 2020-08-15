@@ -18,6 +18,7 @@ target_include_directories(Hyades PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/libs/glfw/i
 set(GLFW_BUILD_DOCS OFF CACHE BOOL "" FORCE)
 set(GLFW_BUILD_TESTS OFF CACHE BOOL "" FORCE)
 set(GLFW_BUILD_EXAMPLES OFF CACHE BOOL "" FORCE)
+set(GLFW_VULKAN_STATIC)
 
 add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/libs/glfw)
 # add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/src/Renderer)

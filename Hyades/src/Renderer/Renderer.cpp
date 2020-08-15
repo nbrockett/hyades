@@ -1,4 +1,6 @@
 #include "Renderer.hpp"
+#include "../Logger.hpp"
+
 
 namespace Hyades
 {
@@ -18,5 +20,12 @@ namespace Hyades
     VulkanRenderer::~VulkanRenderer()
     {
     }
+
+    void VulkanRenderer::render()
+    {
+        Logger::s_logger->info("rendering frame...");
+    }
+
+
 } // namespace Hyades
 

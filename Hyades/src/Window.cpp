@@ -17,15 +17,6 @@ namespace Hyades
             Hyades::Logger::s_logger->error("ERROR: Failed to create GLFW window");
         }
 
-        // glfwSetWindowSizeCallback(m_window, [](GLFWwindow* window, int width, int height)
-        // {
-        //     GLFWwindow* window_handle = static_cast<GLFWwindow*>(glfwGetWindowUserPointer(window));
-
-        //     window_handle->width() = width;
-        //     window_handle->height() = height;
-        // }
-        // )
-
         Hyades::Logger::s_logger->info("Window initialised");
 
         // set callback functions
@@ -56,11 +47,9 @@ namespace Hyades
         // Hyades::Logger::s_logger->critical("Updating!");
         while (!glfwWindowShouldClose(m_window))
         {
-            // render(m_window);
-            // Hyades::Logger::s_logger->debug("Looping!");
-            // m_window->
-            glfwSwapBuffers(m_window);
             glfwPollEvents();
+            glfwSwapBuffers(m_window);
+            m_renderer->render();
         }
     }
 
