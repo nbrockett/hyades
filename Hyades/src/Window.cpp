@@ -29,6 +29,7 @@ namespace Hyades
     
     Window::~Window()
     {   
+        Hyades::Logger::s_logger->debug("Deconstructing Window");
         glfwDestroyWindow(m_window);
     }
 

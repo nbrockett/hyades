@@ -6,6 +6,7 @@ add_library(Hyades SHARED
             src/Renderer/Renderer.cpp
             src/Renderer/RenderContext.cpp)
 
+find_package(Vulkan REQUIRED FATAL_ERROR)
 
 set_target_properties(Hyades PROPERTIES VERSION ${PROJECT_VERSION})
 
@@ -22,7 +23,7 @@ set(GLFW_VULKAN_STATIC)
 
 add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/libs/glfw)
 # add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/src/Renderer)
-target_link_libraries(Hyades glfw)
+target_link_libraries(Hyades glfw vulkan)
 
 # precompile header
 target_precompile_headers(Hyades PRIVATE src/HyadesPCH.hpp)

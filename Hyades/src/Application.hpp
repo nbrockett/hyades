@@ -1,5 +1,5 @@
 #pragma once
-#include "GLFW/glfw3.h"
+// #include "GLFW/glfw3.h"
 #include "Window.hpp"
 #include "Event.hpp"
 #include "Renderer/RenderContext.hpp"
@@ -13,7 +13,7 @@ namespace Hyades
         std::unique_ptr<Window> m_window{ nullptr };
         std::shared_ptr<EventHandler> m_event_handler{ nullptr };
 
-        RenderContext m_renderer = RenderContext();
+        RenderContext m_renderer;
 
     public:
         Application();

@@ -25,9 +25,9 @@ namespace Hyades
 
     Application::~Application()
     {
-        // Hyades::Logger::s_logger->info("Terminating Application");
-        // glfwDestroyWindow(m_window);
-        // glfwTerminate();
+        Hyades::Logger::s_logger->info("Terminating Application");
+
+        m_renderer.destroy();
     }
 
     void Application::run()
