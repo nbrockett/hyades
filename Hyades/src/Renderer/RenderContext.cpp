@@ -5,7 +5,7 @@
 namespace Hyades
 {
 
-    VkResult CreateDebugUtilsMessengerEXT(VkInstance instance, const VkDebugUtilsMessengerCreateInfoEXT* pCreateInfo, const VkAllocationCallbacks* pAllocator, VkDebugUtilsMessengerEXT* pDebugMessenger) 
+    VkResult create_debug_messenger(VkInstance instance, const VkDebugUtilsMessengerCreateInfoEXT* pCreateInfo, const VkAllocationCallbacks* pAllocator, VkDebugUtilsMessengerEXT* pDebugMessenger) 
     {
         auto func = (PFN_vkCreateDebugUtilsMessengerEXT) vkGetInstanceProcAddr(instance, "vkCreateDebugUtilsMessengerEXT");
         if (func != nullptr) {
@@ -15,7 +15,7 @@ namespace Hyades
         }
     }
 
-    void DestroyDebugUtilsMessengerEXT(VkInstance instance, VkDebugUtilsMessengerEXT debugMessenger, const VkAllocationCallbacks* pAllocator) 
+    void destroy_debug_messenger(VkInstance instance, VkDebugUtilsMessengerEXT debugMessenger, const VkAllocationCallbacks* pAllocator) 
     {
         auto func = (PFN_vkDestroyDebugUtilsMessengerEXT) vkGetInstanceProcAddr(instance, "vkDestroyDebugUtilsMessengerEXT");
         if (func != nullptr) {
@@ -24,7 +24,7 @@ namespace Hyades
     }
 
 
-    static VKAPI_ATTR VkBool32 VKAPI_CALL debugCallback(VkDebugUtilsMessageSeverityFlagBitsEXT messageSeverity, VkDebugUtilsMessageTypeFlagsEXT messageType, const VkDebugUtilsMessengerCallbackDataEXT* pCallbackData, void* pUserData) 
+    static VKAPI_ATTR VkBool32 VKAPI_CALL debug_callback(VkDebugUtilsMessageSeverityFlagBitsEXT messageSeverity, VkDebugUtilsMessageTypeFlagsEXT messageType, const VkDebugUtilsMessengerCallbackDataEXT* pCallbackData, void* pUserData) 
     {
 
         std::string info_string = std::string("validation layer: ") + pCallbackData->pMessage;
@@ -66,7 +66,7 @@ namespace Hyades
 
         // destroy vulkan debug messenger
         if (enable_validation_layers) {
-            DestroyDebugUtilsMessengerEXT(m_vk_instance, m_debug_messenger, nullptr);
+            destroy_debug_messenger(m_vk_instance, m_debug_messenger, nullptr);
         }
 
         // destroy vulkan instance
@@ -182,7 +182,7 @@ namespace Hyades
         create_info.sType = VK_STRUCTURE_TYPE_DEBUG_UTILS_MESSENGER_CREATE_INFO_EXT;
         create_info.messageSeverity = VK_DEBUG_UTILS_MESSAGE_SEVERITY_VERBOSE_BIT_EXT | VK_DEBUG_UTILS_MESSAGE_SEVERITY_WARNING_BIT_EXT | VK_DEBUG_UTILS_MESSAGE_SEVERITY_ERROR_BIT_EXT;
         create_info.messageType = VK_DEBUG_UTILS_MESSAGE_TYPE_GENERAL_BIT_EXT | VK_DEBUG_UTILS_MESSAGE_TYPE_VALIDATION_BIT_EXT | VK_DEBUG_UTILS_MESSAGE_TYPE_PERFORMANCE_BIT_EXT;
-        create_info.pfnUserCallback = Hyades::debugCallback;
+        create_info.pfnUserCallback = Hyades::debug_callback;
     }
 
     void RenderContext::setup_debug_messenger() {
@@ -191,7 +191,8 @@ namespace Hyades
         VkDebugUtilsMessengerCreateInfoEXT debug_info;
         populate_debug_info(debug_info);
 
-        if (CreateDebugUtilsMessengerEXT(m_vk_instance, &debug_info, nullptr, &m_debug_messenger) != VK_SUCCESS) {
+        // bind vulkan debug callback
+        if (create_debug_messenger(m_vk_instance, &debug_info, nullptr, &m_debug_messenger) != VK_SUCCESS) {
             throw std::runtime_error("failed to set up debug messenger!");
         }
     }
