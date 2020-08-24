@@ -40,15 +40,12 @@ namespace Hyades
 
         VulkanRenderer m_renderer = VulkanRenderer();
 
-        // std::shared_ptr<Window> m_window{ nullptr };
         const Window& m_window;
 
     public:
-        // RenderContext(/* args */);
+
         RenderContext(const Window& window);
         ~RenderContext();
-
-        // void add_window_handle(GLFWwindow* window);
 
         void init();
         void destroy();

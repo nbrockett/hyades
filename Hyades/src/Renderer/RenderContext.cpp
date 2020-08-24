@@ -53,12 +53,6 @@ namespace Hyades
     }
 
 
-
-    // RenderContext::RenderContext(/* args */)
-    // {
-    //     init();
-    // }
-
     RenderContext::RenderContext(const Window& window) : m_window(window)
     {
         init();
@@ -90,11 +84,6 @@ namespace Hyades
     {
         Logger::s_logger->info("rendering context frame...");
     }
-
-    // void RenderContext::add_window_handle(GLFWwindow* window)
-    // {
-    //     m_window = std::make_shared<GLFWwindow>(window);
-    // }
 
     void RenderContext::init()
     {
@@ -218,7 +207,6 @@ namespace Hyades
             throw std::runtime_error("failed to set up debug messenger!");
         }
     }
-
 
 
 } // namespace Hyades
