@@ -7,8 +7,8 @@
 // 
 #include "Renderer.hpp"
 #include <vulkan/vulkan.h>
-// #define GLFW_INCLUDE_VULKAN
-// #include "GLFW/glfw3.h"
+#define GLFW_INCLUDE_VULKAN
+#include "GLFW/glfw3.h"
 // #include "../Window.hpp"
 
 
@@ -24,7 +24,7 @@ namespace Hyades
     
         VkInstance m_vk_instance;
         VkDebugUtilsMessengerEXT m_debug_messenger;
-        
+        VkSurfaceKHR m_surface;
 
         #ifdef NDEBUG
         const bool use_validation_layers = false;
@@ -40,11 +40,11 @@ namespace Hyades
 
         VulkanRenderer m_renderer = VulkanRenderer();
 
-        const Window& m_window;
+        const GLFWwindow* m_window;
 
     public:
 
-        RenderContext(const Window& window);
+        RenderContext(const GLFWwindow* window);
         ~RenderContext();
 
         void init();

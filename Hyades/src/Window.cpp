@@ -26,7 +26,7 @@ namespace Hyades
         glfwSetKeyCallback(m_window, this->on_key_press);
 
         // create render context
-        m_render_context = std::make_unique<RenderContext>(*this);
+        m_render_context = std::make_unique<RenderContext>(m_window);
 
     }
     

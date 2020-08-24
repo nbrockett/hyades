@@ -1,7 +1,7 @@
 #include "RenderContext.hpp"
 // #include <vulkan/vulkan.h>
-#define GLFW_INCLUDE_VULKAN
-#include "GLFW/glfw3.h"
+// #define GLFW_INCLUDE_VULKAN
+// #include "GLFW/glfw3.h"
 #include "../Window.hpp"
 
 namespace Hyades
@@ -53,7 +53,7 @@ namespace Hyades
     }
 
 
-    RenderContext::RenderContext(const Window& window) : m_window(window)
+    RenderContext::RenderContext(const GLFWwindow* window) : m_window(window)
     {
         init();
     }
@@ -162,8 +162,8 @@ namespace Hyades
         }
     }
 
-    void create_surface() {
-        // if (glfwCreateWindowSurface(m_vk_instance, window, nullptr, &surface) != VK_SUCCESS) {
+    void RenderContext::create_surface() {
+        // if (glfwCreateWindowSurface(m_vk_instance, m_window.window, nullptr, &surface) != VK_SUCCESS) {
         //     throw std::runtime_error("failed to create window surface!");
         // }
     }
