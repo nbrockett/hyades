@@ -6,8 +6,8 @@
 
 // 
 #include "Renderer.hpp"
-#include <vulkan/vulkan.h>
 #define GLFW_INCLUDE_VULKAN
+#include <vulkan/vulkan.h>
 #include "GLFW/glfw3.h"
 // #include "../Window.hpp"
 
@@ -40,11 +40,11 @@ namespace Hyades
 
         VulkanRenderer m_renderer = VulkanRenderer();
 
-        const GLFWwindow* m_window;
+        GLFWwindow* m_window;
 
     public:
 
-        RenderContext(const GLFWwindow* window);
+        RenderContext(GLFWwindow* window);
         ~RenderContext();
 
         void init();

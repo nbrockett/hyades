@@ -1,7 +1,7 @@
 #include "RenderContext.hpp"
 // #include <vulkan/vulkan.h>
-// #define GLFW_INCLUDE_VULKAN
-// #include "GLFW/glfw3.h"
+#define GLFW_INCLUDE_VULKAN
+#include "GLFW/glfw3.h"
 #include "../Window.hpp"
 
 namespace Hyades
@@ -53,10 +53,8 @@ namespace Hyades
     }
 
 
-    RenderContext::RenderContext(const GLFWwindow* window) : m_window(window)
-    {
-        init();
-    }
+    RenderContext::RenderContext(GLFWwindow* window) : m_window(window)
+    {   }
 
     RenderContext::~RenderContext()
     {   }
@@ -70,7 +68,7 @@ namespace Hyades
             destroy_debug_messenger(m_vk_instance, m_debug_messenger, nullptr);
         }
 
-        // destroy vulkan instance
+        vkDestroySurfaceKHR(m_vk_instance, m_surface, nullptr);
         vkDestroyInstance(m_vk_instance, nullptr);
     }
 
@@ -89,6 +87,7 @@ namespace Hyades
     {
         create_instance();
         setup_debug_messenger();
+        create_surface();
     }
 
     bool RenderContext::check_validation_layer_support() {
@@ -162,10 +161,14 @@ namespace Hyades
         }
     }
 
-    void RenderContext::create_surface() {
-        // if (glfwCreateWindowSurface(m_vk_instance, m_window.window, nullptr, &surface) != VK_SUCCESS) {
-        //     throw std::runtime_error("failed to create window surface!");
-        // }
+    void RenderContext::create_surface() 
+    {
+        VkResult result = glfwCreateWindowSurface(m_vk_instance, m_window, nullptr, &m_surface);
+        if (result != VK_SUCCESS) 
+        {
+            Hyades::Logger::s_logger->critical(result);
+            throw std::runtime_error("failed to create window surface!");
+        }
     }
 
 

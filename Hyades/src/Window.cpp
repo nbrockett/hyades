@@ -11,6 +11,7 @@ namespace Hyades
             Hyades::Logger::s_logger->error("ERROR: Failed to initialize GLFW");
         }
 
+        glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
         m_window = glfwCreateWindow(width, height, title.c_str(), nullptr, nullptr);
         if (!m_window)
         {
@@ -27,7 +28,7 @@ namespace Hyades
 
         // create render context
         m_render_context = std::make_unique<RenderContext>(m_window);
-
+        m_render_context->init();
     }
     
     Window::~Window()
@@ -51,8 +52,7 @@ namespace Hyades
         while (!glfwWindowShouldClose(m_window))
         {
             glfwPollEvents();
-            glfwSwapBuffers(m_window);
-            m_render_context->render();
+            // m_render_context->render();
         }
     }
 
