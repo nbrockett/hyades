@@ -42,9 +42,12 @@ namespace Hyades
         VkInstance m_vk_instance;
         VkDebugUtilsMessengerEXT m_debug_messenger;
         VkSurfaceKHR m_surface;
-
         VkPhysicalDevice m_physical_device{ VK_NULL_HANDLE };
-        
+        VkDevice m_device;
+
+        VkQueue m_graphics_queue;
+        VkQueue m_present_queue;
+
         const bool use_validation_layers = true;
 
         const std::vector<const char*> validationLayers = {
@@ -71,6 +74,7 @@ namespace Hyades
         void create_instance();
         void create_surface();
         void choose_physical_device();
+        void create_logical_device();
 
         bool is_device_suitable(VkPhysicalDevice device);
         bool check_device_extension_support(VkPhysicalDevice device);
