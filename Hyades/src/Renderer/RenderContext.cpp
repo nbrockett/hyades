@@ -1,6 +1,8 @@
 #include "RenderContext.hpp"
-#include <vulkan/vulkan.h>
+// #include <vulkan/vulkan.h>
+#define GLFW_INCLUDE_VULKAN
 #include "GLFW/glfw3.h"
+#include "../Window.hpp"
 
 namespace Hyades
 {
@@ -52,7 +54,12 @@ namespace Hyades
 
 
 
-    RenderContext::RenderContext(/* args */)
+    // RenderContext::RenderContext(/* args */)
+    // {
+    //     init();
+    // }
+
+    RenderContext::RenderContext(const Window& window) : m_window(window)
     {
         init();
     }
@@ -65,7 +72,7 @@ namespace Hyades
         Hyades::Logger::s_logger->debug("Destroying Render Context");
 
         // destroy vulkan debug messenger
-        if (enable_validation_layers) {
+        if (use_validation_layers) {
             destroy_debug_messenger(m_vk_instance, m_debug_messenger, nullptr);
         }
 
@@ -81,8 +88,13 @@ namespace Hyades
 
     void RenderContext::render()
     {
-        // Logger::s_logger->info("rendering context frame...");
+        Logger::s_logger->info("rendering context frame...");
     }
+
+    // void RenderContext::add_window_handle(GLFWwindow* window)
+    // {
+    //     m_window = std::make_shared<GLFWwindow>(window);
+    // }
 
     void RenderContext::init()
     {
@@ -117,7 +129,7 @@ namespace Hyades
 
     void RenderContext::create_instance()
     {
-        if (enable_validation_layers && !check_validation_layer_support()) {
+        if (use_validation_layers && !check_validation_layer_support()) {
             Hyades::Logger::s_logger->error("Couldn't find any Vulkan validation layers");
             throw std::runtime_error("validation layers requested, but not available!");
         }
@@ -141,8 +153,11 @@ namespace Hyades
         vk_instance_info.enabledExtensionCount = static_cast<uint32_t>(extensions.size());
         vk_instance_info.ppEnabledExtensionNames = extensions.data();
 
+        // setup debug info for instance creation and destruction
         VkDebugUtilsMessengerCreateInfoEXT vk_debug_info;
-        if (enable_validation_layers) {
+
+
+        if (use_validation_layers) {
             vk_instance_info.enabledLayerCount = static_cast<uint32_t>(validationLayers.size());
             vk_instance_info.ppEnabledLayerNames = validationLayers.data();
 
@@ -158,6 +173,13 @@ namespace Hyades
         }
     }
 
+    void create_surface() {
+        // if (glfwCreateWindowSurface(m_vk_instance, window, nullptr, &surface) != VK_SUCCESS) {
+        //     throw std::runtime_error("failed to create window surface!");
+        // }
+    }
+
+
     std::vector<const char*> RenderContext::get_required_extensions() 
     {
 
@@ -170,7 +192,7 @@ namespace Hyades
 
         std::vector<const char*> extensions(glfwExtensions, glfwExtensions + glfwExtensionCount);
 
-        if (enable_validation_layers) {
+        if (use_validation_layers) {
             extensions.push_back(VK_EXT_DEBUG_UTILS_EXTENSION_NAME);
         }
 
@@ -186,7 +208,7 @@ namespace Hyades
     }
 
     void RenderContext::setup_debug_messenger() {
-        if (!enable_validation_layers) return;
+        if (!use_validation_layers) return;
 
         VkDebugUtilsMessengerCreateInfoEXT debug_info;
         populate_debug_info(debug_info);

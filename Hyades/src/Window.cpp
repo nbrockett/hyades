@@ -25,11 +25,17 @@ namespace Hyades
         glfwSetWindowCloseCallback(m_window, this->on_window_close);
         glfwSetKeyCallback(m_window, this->on_key_press);
 
+        // create render context
+        m_render_context = std::make_unique<RenderContext>(*this);
+
     }
     
     Window::~Window()
     {   
         Hyades::Logger::s_logger->debug("Deconstructing Window");
+        
+        m_render_context->destroy();
+        
         glfwDestroyWindow(m_window);
     }
 
@@ -38,10 +44,6 @@ namespace Hyades
         m_event_handler = handler;
     }
 
-    void Window::set_renderer(const RenderContext& renderer)
-    {
-        m_renderer = std::make_unique<RenderContext>(renderer);
-    }
 
     void Window::on_update()
     {
@@ -50,7 +52,7 @@ namespace Hyades
         {
             glfwPollEvents();
             glfwSwapBuffers(m_window);
-            m_renderer->render();
+            m_render_context->render();
         }
     }
 

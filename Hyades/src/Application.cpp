@@ -14,7 +14,6 @@ namespace Hyades
 
         // set window object bindings
         m_window->set_event_handler(m_event_handler);
-        m_window->set_renderer(m_renderer);
 
         // set application event callback functions
         m_event_handler->add_handler<WindowCloseEvent>(std::bind(&Application::on_window_close, this, std::placeholders::_1));
@@ -27,18 +26,14 @@ namespace Hyades
     {
         Hyades::Logger::s_logger->info("Terminating Application");
 
-        m_renderer.destroy();
     }
 
     void Application::run()
     {
-
-
         while (m_running)
         {
             m_window->on_update();
         }
-
 
     }
 
@@ -52,7 +47,7 @@ namespace Hyades
     {
         Hyades::Logger::s_logger->info("Resize event triggered..");
 
-        m_renderer.on_window_resize(event.width(), event.height());
+        // m_render_context.on_window_resize(event.width(), event.height());
     }
 
 

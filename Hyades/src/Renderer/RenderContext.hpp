@@ -4,16 +4,19 @@
 // #define GLFW_INCLUDE_VULKAN
 // #endif
 
+// 
 #include "Renderer.hpp"
 #include <vulkan/vulkan.h>
 // #define GLFW_INCLUDE_VULKAN
 // #include "GLFW/glfw3.h"
+// #include "../Window.hpp"
+
+
 
 namespace Hyades
 {
 
-    
-
+    class Window;
 
     class RenderContext
     {
@@ -24,9 +27,9 @@ namespace Hyades
         
 
         #ifdef NDEBUG
-        const bool enable_validation_layers = false;
+        const bool use_validation_layers = false;
         #else
-        const bool enable_validation_layers = true;
+        const bool use_validation_layers = true;
         #endif
 
         const std::vector<const char*> validationLayers = {
@@ -36,14 +39,22 @@ namespace Hyades
         
 
         VulkanRenderer m_renderer = VulkanRenderer();
+
+        // std::shared_ptr<Window> m_window{ nullptr };
+        const Window& m_window;
+
     public:
-        RenderContext(/* args */);
+        // RenderContext(/* args */);
+        RenderContext(const Window& window);
         ~RenderContext();
+
+        // void add_window_handle(GLFWwindow* window);
 
         void init();
         void destroy();
 
         void create_instance();
+        void create_surface();
 
         static void on_window_resize(uint32_t width, uint32_t height);
 
