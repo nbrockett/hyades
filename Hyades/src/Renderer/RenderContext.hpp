@@ -16,6 +16,23 @@
 namespace Hyades
 {
 
+    struct SwapChainSupportDetails 
+    {
+        VkSurfaceCapabilitiesKHR capabilities;
+        std::vector<VkSurfaceFormatKHR> formats;
+        std::vector<VkPresentModeKHR> presentModes;
+    };
+
+    struct QueueFamilyIndices 
+    {
+        std::optional<uint32_t> graphics_family;
+        std::optional<uint32_t> present_family;
+
+        bool is_complete() {
+            return graphics_family.has_value() && present_family.has_value();
+        }
+    };
+
     class Window;
 
     class RenderContext
@@ -26,16 +43,17 @@ namespace Hyades
         VkDebugUtilsMessengerEXT m_debug_messenger;
         VkSurfaceKHR m_surface;
 
-        #ifdef NDEBUG
-        const bool use_validation_layers = false;
-        #else
+        VkPhysicalDevice m_physical_device{ VK_NULL_HANDLE };
+        
         const bool use_validation_layers = true;
-        #endif
 
         const std::vector<const char*> validationLayers = {
             "VK_LAYER_KHRONOS_validation"
         };
 
+        const std::vector<const char*> deviceExtensions = {
+            VK_KHR_SWAPCHAIN_EXTENSION_NAME
+        };
         
 
         VulkanRenderer m_renderer = VulkanRenderer();
@@ -52,6 +70,12 @@ namespace Hyades
 
         void create_instance();
         void create_surface();
+        void choose_physical_device();
+
+        bool is_device_suitable(VkPhysicalDevice device);
+        bool check_device_extension_support(VkPhysicalDevice device);
+        QueueFamilyIndices find_queue_families(VkPhysicalDevice device);
+        SwapChainSupportDetails query_swap_chain_support(VkPhysicalDevice device); 
 
         static void on_window_resize(uint32_t width, uint32_t height);
 
