@@ -68,6 +68,9 @@ namespace Hyades
     {
         Hyades::Logger::s_logger->debug("Destroying Render Context");
 
+
+        vkDestroyDevice(m_device, nullptr);
+
         // destroy vulkan debug messenger
         if (use_validation_layers) {
             destroy_debug_messenger(m_vk_instance, m_debug_messenger, nullptr);
@@ -75,6 +78,8 @@ namespace Hyades
 
         vkDestroySurfaceKHR(m_vk_instance, m_surface, nullptr);
         vkDestroyInstance(m_vk_instance, nullptr);
+
+
     }
 
     void RenderContext::on_window_resize(u_int32_t width, uint32_t height)
