@@ -9,60 +9,61 @@
 namespace Hyades
 {
 
-    
-
-
-    VkResult create_debug_messenger(VkInstance instance, const VkDebugUtilsMessengerCreateInfoEXT* pCreateInfo, const VkAllocationCallbacks* pAllocator, VkDebugUtilsMessengerEXT* pDebugMessenger) 
+    VkResult create_debug_messenger(VkInstance instance, const VkDebugUtilsMessengerCreateInfoEXT *pCreateInfo, const VkAllocationCallbacks *pAllocator, VkDebugUtilsMessengerEXT *pDebugMessenger)
     {
-        auto func = (PFN_vkCreateDebugUtilsMessengerEXT) vkGetInstanceProcAddr(instance, "vkCreateDebugUtilsMessengerEXT");
-        if (func != nullptr) {
+        auto func = (PFN_vkCreateDebugUtilsMessengerEXT)vkGetInstanceProcAddr(instance, "vkCreateDebugUtilsMessengerEXT");
+        if (func != nullptr)
+        {
             return func(instance, pCreateInfo, pAllocator, pDebugMessenger);
-        } else {
+        }
+        else
+        {
             return VK_ERROR_EXTENSION_NOT_PRESENT;
         }
     }
 
-    void destroy_debug_messenger(VkInstance instance, VkDebugUtilsMessengerEXT debugMessenger, const VkAllocationCallbacks* pAllocator) 
+    void destroy_debug_messenger(VkInstance instance, VkDebugUtilsMessengerEXT debugMessenger, const VkAllocationCallbacks *pAllocator)
     {
-        auto func = (PFN_vkDestroyDebugUtilsMessengerEXT) vkGetInstanceProcAddr(instance, "vkDestroyDebugUtilsMessengerEXT");
-        if (func != nullptr) {
+        auto func = (PFN_vkDestroyDebugUtilsMessengerEXT)vkGetInstanceProcAddr(instance, "vkDestroyDebugUtilsMessengerEXT");
+        if (func != nullptr)
+        {
             func(instance, debugMessenger, pAllocator);
         }
     }
 
-
-    static VKAPI_ATTR VkBool32 VKAPI_CALL debug_callback(VkDebugUtilsMessageSeverityFlagBitsEXT messageSeverity, VkDebugUtilsMessageTypeFlagsEXT messageType, const VkDebugUtilsMessengerCallbackDataEXT* pCallbackData, void* pUserData) 
+    static VKAPI_ATTR VkBool32 VKAPI_CALL debug_callback(VkDebugUtilsMessageSeverityFlagBitsEXT messageSeverity, VkDebugUtilsMessageTypeFlagsEXT messageType, const VkDebugUtilsMessengerCallbackDataEXT *pCallbackData, void *pUserData)
     {
 
         std::string info_string = std::string("validation layer: ") + pCallbackData->pMessage;
 
         switch (messageSeverity)
         {
-            case VK_DEBUG_UTILS_MESSAGE_SEVERITY_VERBOSE_BIT_EXT:
-                Hyades::Logger::s_logger->debug(info_string);
-                break;
-            case VK_DEBUG_UTILS_MESSAGE_SEVERITY_INFO_BIT_EXT:
-                Hyades::Logger::s_logger->warn(info_string);
-                break;
-            case VK_DEBUG_UTILS_MESSAGE_SEVERITY_WARNING_BIT_EXT:
-                Hyades::Logger::s_logger->warn(info_string);
-                break;
-            case VK_DEBUG_UTILS_MESSAGE_SEVERITY_ERROR_BIT_EXT:
-                Hyades::Logger::s_logger->error(info_string);
-                break;
-            default:
-                Hyades::Logger::s_logger->error(info_string);
+        case VK_DEBUG_UTILS_MESSAGE_SEVERITY_VERBOSE_BIT_EXT:
+            Hyades::Logger::s_logger->debug(info_string);
+            break;
+        case VK_DEBUG_UTILS_MESSAGE_SEVERITY_INFO_BIT_EXT:
+            Hyades::Logger::s_logger->warn(info_string);
+            break;
+        case VK_DEBUG_UTILS_MESSAGE_SEVERITY_WARNING_BIT_EXT:
+            Hyades::Logger::s_logger->warn(info_string);
+            break;
+        case VK_DEBUG_UTILS_MESSAGE_SEVERITY_ERROR_BIT_EXT:
+            Hyades::Logger::s_logger->error(info_string);
+            break;
+        default:
+            Hyades::Logger::s_logger->error(info_string);
         }
 
         return VK_FALSE;
     }
 
-
-    RenderContext::RenderContext(GLFWwindow* window) : m_window(window)
-    {   }
+    RenderContext::RenderContext(GLFWwindow *window) : m_window(window)
+    {
+    }
 
     RenderContext::~RenderContext()
-    {   }
+    {
+    }
 
     void RenderContext::destroy()
     {
@@ -71,24 +72,20 @@ namespace Hyades
         // clean up swap chain
         vkDestroySwapchainKHR(m_device, swapChain, nullptr);
 
-
         vkDestroyDevice(m_device, nullptr);
 
         // destroy vulkan debug messenger
-        if (use_validation_layers) {
+        if (use_validation_layers)
+        {
             destroy_debug_messenger(m_vk_instance, m_debug_messenger, nullptr);
         }
 
         vkDestroySurfaceKHR(m_vk_instance, m_surface, nullptr);
         vkDestroyInstance(m_vk_instance, nullptr);
-
-
     }
 
     void RenderContext::on_window_resize(u_int32_t width, uint32_t height)
     {
-        
-
     }
 
     void RenderContext::render()
@@ -106,24 +103,29 @@ namespace Hyades
         create_swap_chain();
     }
 
-    bool RenderContext::check_validation_layer_support() {
+    bool RenderContext::check_validation_layer_support()
+    {
         uint32_t layer_count;
         vkEnumerateInstanceLayerProperties(&layer_count, nullptr);
 
         std::vector<VkLayerProperties> available_layers(layer_count);
         vkEnumerateInstanceLayerProperties(&layer_count, available_layers.data());
 
-        for (const auto layerName : validationLayers) {
+        for (const auto layerName : validationLayers)
+        {
             bool layer_found = false;
 
-            for (const auto& layer_properties : available_layers) {
-                if (strcmp(layerName, layer_properties.layerName) == 0) {
+            for (const auto &layer_properties : available_layers)
+            {
+                if (strcmp(layerName, layer_properties.layerName) == 0)
+                {
                     layer_found = true;
                     break;
                 }
             }
 
-            if (!layer_found) {
+            if (!layer_found)
+            {
                 return false;
             }
         }
@@ -133,7 +135,8 @@ namespace Hyades
 
     void RenderContext::create_instance()
     {
-        if (use_validation_layers && !check_validation_layer_support()) {
+        if (use_validation_layers && !check_validation_layer_support())
+        {
             Hyades::Logger::s_logger->error("Couldn't find any Vulkan validation layers");
             throw std::runtime_error("validation layers requested, but not available!");
         }
@@ -152,7 +155,6 @@ namespace Hyades
         vk_instance_info.sType = VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO;
         vk_instance_info.pApplicationInfo = &vk_app_info;
 
-
         auto extensions = RenderContext::get_required_extensions();
         vk_instance_info.enabledExtensionCount = static_cast<uint32_t>(extensions.size());
         vk_instance_info.ppEnabledExtensionNames = extensions.data();
@@ -160,34 +162,37 @@ namespace Hyades
         // setup debug info for instance creation and destruction
         VkDebugUtilsMessengerCreateInfoEXT vk_debug_info;
 
-
-        if (use_validation_layers) {
+        if (use_validation_layers)
+        {
             vk_instance_info.enabledLayerCount = static_cast<uint32_t>(validationLayers.size());
             vk_instance_info.ppEnabledLayerNames = validationLayers.data();
 
             populate_debug_info(vk_debug_info);
-            vk_instance_info.pNext = (VkDebugUtilsMessengerCreateInfoEXT*) &vk_debug_info;
-        } else {
+            vk_instance_info.pNext = (VkDebugUtilsMessengerCreateInfoEXT *)&vk_debug_info;
+        }
+        else
+        {
             vk_instance_info.enabledLayerCount = 0;
             vk_instance_info.pNext = nullptr;
         }
 
-        if (vkCreateInstance(&vk_instance_info, nullptr, &m_vk_instance) != VK_SUCCESS) {
+        if (vkCreateInstance(&vk_instance_info, nullptr, &m_vk_instance) != VK_SUCCESS)
+        {
             throw std::runtime_error("failed to create instance!");
         }
     }
 
-    void RenderContext::create_surface() 
+    void RenderContext::create_surface()
     {
         VkResult result = glfwCreateWindowSurface(m_vk_instance, m_window, nullptr, &m_surface);
-        if (result != VK_SUCCESS) 
+        if (result != VK_SUCCESS)
         {
             Hyades::Logger::s_logger->critical(result);
             throw std::runtime_error("failed to create window surface!");
         }
     }
 
-    SwapChainSupportDetails RenderContext::query_swap_chain_support(VkPhysicalDevice device) 
+    SwapChainSupportDetails RenderContext::query_swap_chain_support(VkPhysicalDevice device)
     {
         SwapChainSupportDetails details;
 
@@ -196,7 +201,8 @@ namespace Hyades
         uint32_t formatCount;
         vkGetPhysicalDeviceSurfaceFormatsKHR(device, m_surface, &formatCount, nullptr);
 
-        if (formatCount != 0) {
+        if (formatCount != 0)
+        {
             details.formats.resize(formatCount);
             vkGetPhysicalDeviceSurfaceFormatsKHR(device, m_surface, &formatCount, details.formats.data());
         }
@@ -204,7 +210,8 @@ namespace Hyades
         uint32_t presentModeCount;
         vkGetPhysicalDeviceSurfacePresentModesKHR(device, m_surface, &presentModeCount, nullptr);
 
-        if (presentModeCount != 0) {
+        if (presentModeCount != 0)
+        {
             details.presentModes.resize(presentModeCount);
             vkGetPhysicalDeviceSurfacePresentModesKHR(device, m_surface, &presentModeCount, details.presentModes.data());
         }
@@ -212,14 +219,15 @@ namespace Hyades
         return details;
     }
 
-    bool RenderContext::is_device_suitable(VkPhysicalDevice device) 
+    bool RenderContext::is_device_suitable(VkPhysicalDevice device)
     {
         QueueFamilyIndices indices = find_queue_families(device);
 
         bool extensionsSupported = check_device_extension_support(device);
 
         bool swapChainAdequate = false;
-        if (extensionsSupported) {
+        if (extensionsSupported)
+        {
             SwapChainSupportDetails swapChainSupport = query_swap_chain_support(device);
             swapChainAdequate = !swapChainSupport.formats.empty() && !swapChainSupport.presentModes.empty();
         }
@@ -237,14 +245,15 @@ namespace Hyades
 
         std::set<std::string> requiredExtensions(deviceExtensions.begin(), deviceExtensions.end());
 
-        for (const auto& extension : availableExtensions) {
+        for (const auto &extension : availableExtensions)
+        {
             requiredExtensions.erase(extension.extensionName);
         }
 
         return requiredExtensions.empty();
     }
 
-    QueueFamilyIndices RenderContext::find_queue_families(VkPhysicalDevice device) 
+    QueueFamilyIndices RenderContext::find_queue_families(VkPhysicalDevice device)
     {
         QueueFamilyIndices indices;
 
@@ -255,19 +264,23 @@ namespace Hyades
         vkGetPhysicalDeviceQueueFamilyProperties(device, &queueFamilyCount, queueFamilies.data());
 
         int i = 0;
-        for (const auto& queueFamily : queueFamilies) {
-            if (queueFamily.queueFlags & VK_QUEUE_GRAPHICS_BIT) {
+        for (const auto &queueFamily : queueFamilies)
+        {
+            if (queueFamily.queueFlags & VK_QUEUE_GRAPHICS_BIT)
+            {
                 indices.graphics_family = i;
             }
 
             VkBool32 presentSupport = false;
             vkGetPhysicalDeviceSurfaceSupportKHR(device, i, m_surface, &presentSupport);
 
-            if (presentSupport) {
+            if (presentSupport)
+            {
                 indices.present_family = i;
             }
 
-            if (indices.is_complete()) {
+            if (indices.is_complete())
+            {
                 break;
             }
 
@@ -281,7 +294,7 @@ namespace Hyades
     {
         uint32_t n_devices = 0;
         vkEnumeratePhysicalDevices(m_vk_instance, &n_devices, nullptr);
-        
+
         if (n_devices == 0)
         {
             throw std::runtime_error("Failed to find any GPUs with Vulkan support");
@@ -291,7 +304,7 @@ namespace Hyades
         vkEnumeratePhysicalDevices(m_vk_instance, &n_devices, devices.data());
 
         // choose first, suitable device
-        for (const auto& device : devices)
+        for (const auto &device : devices)
         {
             if (is_device_suitable(device))
             {
@@ -301,22 +314,23 @@ namespace Hyades
         }
 
         // else no device is suitable
-        if (m_physical_device == VK_NULL_HANDLE) {
+        if (m_physical_device == VK_NULL_HANDLE)
+        {
             throw std::runtime_error("Failed to find suitable GPU");
         }
-
     }
 
     //************** LOGICAL DEVICE **************//
     void RenderContext::create_logical_device()
     {
         QueueFamilyIndices indices = find_queue_families(m_physical_device);
-        
+
         std::vector<VkDeviceQueueCreateInfo> queueCreateInfos;
         std::set<uint32_t> uniqueQueueFamilies = {indices.graphics_family.value(), indices.present_family.value()};
 
         float queuePriority = 1.0f;
-        for (uint32_t queueFamily : uniqueQueueFamilies) {
+        for (uint32_t queueFamily : uniqueQueueFamilies)
+        {
             VkDeviceQueueCreateInfo queueCreateInfo{};
             queueCreateInfo.sType = VK_STRUCTURE_TYPE_DEVICE_QUEUE_CREATE_INFO;
             queueCreateInfo.queueFamilyIndex = queueFamily;
@@ -338,44 +352,48 @@ namespace Hyades
         createInfo.enabledExtensionCount = static_cast<uint32_t>(deviceExtensions.size());
         createInfo.ppEnabledExtensionNames = deviceExtensions.data();
 
-        if (use_validation_layers) {
+        if (use_validation_layers)
+        {
             createInfo.enabledLayerCount = static_cast<uint32_t>(validationLayers.size());
             createInfo.ppEnabledLayerNames = validationLayers.data();
-        } else {
+        }
+        else
+        {
             createInfo.enabledLayerCount = 0;
         }
 
-        if (vkCreateDevice(m_physical_device, &createInfo, nullptr, &m_device) != VK_SUCCESS) {
+        if (vkCreateDevice(m_physical_device, &createInfo, nullptr, &m_device) != VK_SUCCESS)
+        {
             throw std::runtime_error("failed to create logical device!");
         }
 
         vkGetDeviceQueue(m_device, indices.graphics_family.value(), 0, &m_graphics_queue);
         vkGetDeviceQueue(m_device, indices.present_family.value(), 0, &m_present_queue);
-
     }
 
-
     //************** EXTENSIONS **************//
-    std::vector<const char*> RenderContext::get_required_extensions() 
+    std::vector<const char *> RenderContext::get_required_extensions()
     {
 
         // extension to interface with GLFW
         uint32_t glfwExtensionCount = 0;
-        const char** glfwExtensions;
+        const char **glfwExtensions;
         glfwExtensions = glfwGetRequiredInstanceExtensions(&glfwExtensionCount);
         // glfwExtensions = glfwGetRequiredInstanceExtensions(&glfwExtensionCount);
         // const char** glfwExtensions = new char*[10] {"Nope"};
 
-        std::vector<const char*> extensions(glfwExtensions, glfwExtensions + glfwExtensionCount);
+        std::vector<const char *> extensions(glfwExtensions, glfwExtensions + glfwExtensionCount);
 
-        if (use_validation_layers) {
+        if (use_validation_layers)
+        {
             extensions.push_back(VK_EXT_DEBUG_UTILS_EXTENSION_NAME);
         }
 
         return extensions;
     }
 
-    void RenderContext::populate_debug_info(VkDebugUtilsMessengerCreateInfoEXT& create_info) {
+    void RenderContext::populate_debug_info(VkDebugUtilsMessengerCreateInfoEXT &create_info)
+    {
         create_info = {};
         create_info.sType = VK_STRUCTURE_TYPE_DEBUG_UTILS_MESSENGER_CREATE_INFO_EXT;
         create_info.messageSeverity = VK_DEBUG_UTILS_MESSAGE_SEVERITY_VERBOSE_BIT_EXT | VK_DEBUG_UTILS_MESSAGE_SEVERITY_WARNING_BIT_EXT | VK_DEBUG_UTILS_MESSAGE_SEVERITY_ERROR_BIT_EXT;
@@ -383,21 +401,24 @@ namespace Hyades
         create_info.pfnUserCallback = Hyades::debug_callback;
     }
 
-    void RenderContext::setup_debug_messenger() {
-        if (!use_validation_layers) return;
+    void RenderContext::setup_debug_messenger()
+    {
+        if (!use_validation_layers)
+            return;
 
         VkDebugUtilsMessengerCreateInfoEXT debug_info;
         populate_debug_info(debug_info);
 
         // bind vulkan debug callback
-        if (create_debug_messenger(m_vk_instance, &debug_info, nullptr, &m_debug_messenger) != VK_SUCCESS) {
+        if (create_debug_messenger(m_vk_instance, &debug_info, nullptr, &m_debug_messenger) != VK_SUCCESS)
+        {
             throw std::runtime_error("failed to set up debug messenger!");
         }
     }
 
     void RenderContext::create_swap_chain()
     {
-        
+
         SwapChainSupportDetails swapChainSupport = query_swap_chain_support(m_physical_device);
 
         VkSurfaceFormatKHR surfaceFormat = chooseSwapSurfaceFormat(swapChainSupport.formats);
@@ -405,7 +426,8 @@ namespace Hyades
         VkExtent2D extent = chooseSwapExtent(swapChainSupport.capabilities);
 
         uint32_t imageCount = swapChainSupport.capabilities.minImageCount + 1;
-        if (swapChainSupport.capabilities.maxImageCount > 0 && imageCount > swapChainSupport.capabilities.maxImageCount) {
+        if (swapChainSupport.capabilities.maxImageCount > 0 && imageCount > swapChainSupport.capabilities.maxImageCount)
+        {
             imageCount = swapChainSupport.capabilities.maxImageCount;
         }
 
@@ -423,11 +445,14 @@ namespace Hyades
         QueueFamilyIndices indices = find_queue_families(m_physical_device);
         uint32_t queueFamilyIndices[] = {indices.graphics_family.value(), indices.present_family.value()};
 
-        if (indices.graphics_family != indices.present_family) {
+        if (indices.graphics_family != indices.present_family)
+        {
             createInfo.imageSharingMode = VK_SHARING_MODE_CONCURRENT;
             createInfo.queueFamilyIndexCount = 2;
             createInfo.pQueueFamilyIndices = queueFamilyIndices;
-        } else {
+        }
+        else
+        {
             createInfo.imageSharingMode = VK_SHARING_MODE_EXCLUSIVE;
         }
 
@@ -436,7 +461,8 @@ namespace Hyades
         createInfo.presentMode = presentMode;
         createInfo.clipped = VK_TRUE;
 
-        if (vkCreateSwapchainKHR(m_device, &createInfo, nullptr, &swapChain) != VK_SUCCESS) {
+        if (vkCreateSwapchainKHR(m_device, &createInfo, nullptr, &swapChain) != VK_SUCCESS)
+        {
             throw std::runtime_error("failed to create swap chain!");
         }
 
@@ -448,9 +474,12 @@ namespace Hyades
         swapChainExtent = extent;
     }
 
-    VkSurfaceFormatKHR RenderContext::chooseSwapSurfaceFormat(const std::vector<VkSurfaceFormatKHR>& availableFormats) {
-        for (const auto& availableFormat : availableFormats) {
-            if (availableFormat.format == VK_FORMAT_B8G8R8A8_SRGB && availableFormat.colorSpace == VK_COLOR_SPACE_SRGB_NONLINEAR_KHR) {
+    VkSurfaceFormatKHR RenderContext::chooseSwapSurfaceFormat(const std::vector<VkSurfaceFormatKHR> &availableFormats)
+    {
+        for (const auto &availableFormat : availableFormats)
+        {
+            if (availableFormat.format == VK_FORMAT_B8G8R8A8_SRGB && availableFormat.colorSpace == VK_COLOR_SPACE_SRGB_NONLINEAR_KHR)
+            {
                 return availableFormat;
             }
         }
@@ -458,9 +487,12 @@ namespace Hyades
         return availableFormats[0];
     }
 
-    VkPresentModeKHR RenderContext::chooseSwapPresentMode(const std::vector<VkPresentModeKHR>& availablePresentModes) {
-        for (const auto& availablePresentMode : availablePresentModes) {
-            if (availablePresentMode == VK_PRESENT_MODE_MAILBOX_KHR) {
+    VkPresentModeKHR RenderContext::chooseSwapPresentMode(const std::vector<VkPresentModeKHR> &availablePresentModes)
+    {
+        for (const auto &availablePresentMode : availablePresentModes)
+        {
+            if (availablePresentMode == VK_PRESENT_MODE_MAILBOX_KHR)
+            {
                 return availablePresentMode;
             }
         }
@@ -468,17 +500,20 @@ namespace Hyades
         return VK_PRESENT_MODE_FIFO_KHR;
     }
 
-    VkExtent2D RenderContext::chooseSwapExtent(const VkSurfaceCapabilitiesKHR& capabilities) {
-        if (capabilities.currentExtent.width != UINT32_MAX) {
+    VkExtent2D RenderContext::chooseSwapExtent(const VkSurfaceCapabilitiesKHR &capabilities)
+    {
+        if (capabilities.currentExtent.width != UINT32_MAX)
+        {
             return capabilities.currentExtent;
-        } else {
+        }
+        else
+        {
             int width, height;
             glfwGetFramebufferSize(m_window, &width, &height);
 
             VkExtent2D actualExtent = {
                 static_cast<uint32_t>(width),
-                static_cast<uint32_t>(height)
-            };
+                static_cast<uint32_t>(height)};
 
             actualExtent.width = std::max(capabilities.minImageExtent.width, std::min(capabilities.maxImageExtent.width, actualExtent.width));
             actualExtent.height = std::max(capabilities.minImageExtent.height, std::min(capabilities.maxImageExtent.height, actualExtent.height));
@@ -488,4 +523,3 @@ namespace Hyades
     }
 
 } // namespace Hyades
-
