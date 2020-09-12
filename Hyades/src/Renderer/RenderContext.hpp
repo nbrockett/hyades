@@ -11,6 +11,7 @@
 #include "GLFW/glfw3.h"
 #include "SwapChain.hpp"
 // #include "../Window.hpp"
+#include "QueueFamily.hpp"
 
 namespace Hyades
 {
@@ -22,16 +23,16 @@ namespace Hyades
     //     std::vector<VkPresentModeKHR> presentModes;
     // };
 
-    struct QueueFamilyIndices
-    {
-        std::optional<uint32_t> graphics_family;
-        std::optional<uint32_t> present_family;
+    // struct QueueFamilyIndices
+    // {
+    //     std::optional<uint32_t> graphics_family;
+    //     std::optional<uint32_t> present_family;
 
-        bool is_complete()
-        {
-            return graphics_family.has_value() && present_family.has_value();
-        }
-    };
+    //     bool is_complete()
+    //     {
+    //         return graphics_family.has_value() && present_family.has_value();
+    //     }
+    // };
 
     class Window;
 
@@ -48,13 +49,13 @@ namespace Hyades
         VkQueue m_present_queue;
 
         // swap chain vars
-        SwapChain swapChain2;
-        VkSwapchainKHR swapChain;
-        std::vector<VkImage> swapChainImages;
-        VkFormat swapChainImageFormat;
-        VkExtent2D swapChainExtent;
-        std::vector<VkImageView> swapChainImageViews;
-        std::vector<VkFramebuffer> swapChainFramebuffers;
+        SwapChain swapChain;
+        // VkSwapchainKHR swapChain;
+        // std::vector<VkImage> swapChainImages;
+        // VkFormat swapChainImageFormat;
+        // VkExtent2D swapChainExtent;
+        // std::vector<VkImageView> swapChainImageViews;
+        // std::vector<VkFramebuffer> swapChainFramebuffers;
 
         const bool use_validation_layers = true;
 
@@ -86,10 +87,6 @@ namespace Hyades
         QueueFamilyIndices find_queue_families(VkPhysicalDevice device);
         SwapChainSupportDetails query_swap_chain_support(VkPhysicalDevice device);
 
-        VkSurfaceFormatKHR chooseSwapSurfaceFormat(const std::vector<VkSurfaceFormatKHR> &availableFormats);
-        VkPresentModeKHR chooseSwapPresentMode(const std::vector<VkPresentModeKHR> &availablePresentModes);
-        VkExtent2D chooseSwapExtent(const VkSurfaceCapabilitiesKHR &capabilities);
-
         static void on_window_resize(uint32_t width, uint32_t height);
 
         void render();
@@ -98,5 +95,4 @@ namespace Hyades
         void populate_debug_info(VkDebugUtilsMessengerCreateInfoEXT &createInfo);
         void setup_debug_messenger();
     };
-
 } // namespace Hyades
