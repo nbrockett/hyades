@@ -57,7 +57,7 @@ namespace Hyades
         return VK_FALSE;
     }
 
-    RenderContext::RenderContext(GLFWwindow *window) : m_window(window)
+    RenderContext::RenderContext(GLFWwindow *window) : m_window(window), swapChain2(m_surface)
     {
     }
 
@@ -419,7 +419,10 @@ namespace Hyades
     void RenderContext::create_swap_chain()
     {
 
-        SwapChainSupportDetails swapChainSupport = query_swap_chain_support(m_physical_device);
+        // swapChain2 = SwapChain(m_surface);
+
+        // SwapChainSupportDetails swapChainSupport = query_swap_chain_support(m_physical_device);
+        SwapChainSupportDetails swapChainSupport = swapChain2.query_swap_chain_support(m_physical_device);
 
         VkSurfaceFormatKHR surfaceFormat = chooseSwapSurfaceFormat(swapChainSupport.formats);
         VkPresentModeKHR presentMode = chooseSwapPresentMode(swapChainSupport.presentModes);

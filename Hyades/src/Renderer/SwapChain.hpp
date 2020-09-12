@@ -13,15 +13,15 @@ namespace Hyades
         std::vector<VkPresentModeKHR> presentModes;
     };
 
-
     class SwapChain
     {
     private:
+        const VkSurfaceKHR& m_surface;
 
         VkSwapchainKHR swapChain;
         std::vector<VkImage> swapChainImages;
     public:
-        SwapChain(/* args */);
+        SwapChain(VkSurfaceKHR& surface);
         ~SwapChain();
 
         SwapChainSupportDetails query_swap_chain_support(VkPhysicalDevice device);

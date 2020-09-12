@@ -9,17 +9,18 @@
 #define GLFW_INCLUDE_VULKAN
 #include <vulkan/vulkan.h>
 #include "GLFW/glfw3.h"
+#include "SwapChain.hpp"
 // #include "../Window.hpp"
 
 namespace Hyades
 {
 
-    struct SwapChainSupportDetails
-    {
-        VkSurfaceCapabilitiesKHR capabilities;
-        std::vector<VkSurfaceFormatKHR> formats;
-        std::vector<VkPresentModeKHR> presentModes;
-    };
+    // struct SwapChainSupportDetails
+    // {
+    //     VkSurfaceCapabilitiesKHR capabilities;
+    //     std::vector<VkSurfaceFormatKHR> formats;
+    //     std::vector<VkPresentModeKHR> presentModes;
+    // };
 
     struct QueueFamilyIndices
     {
@@ -47,6 +48,7 @@ namespace Hyades
         VkQueue m_present_queue;
 
         // swap chain vars
+        SwapChain swapChain2;
         VkSwapchainKHR swapChain;
         std::vector<VkImage> swapChainImages;
         VkFormat swapChainImageFormat;
