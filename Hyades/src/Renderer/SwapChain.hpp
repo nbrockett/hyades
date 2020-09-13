@@ -34,6 +34,8 @@ namespace Hyades
         VkSurfaceFormatKHR chooseSwapSurfaceFormat(const std::vector<VkSurfaceFormatKHR> &availableFormats);
         VkPresentModeKHR chooseSwapPresentMode(const std::vector<VkPresentModeKHR> &availablePresentModes);
         VkExtent2D chooseSwapExtent(const VkSurfaceCapabilitiesKHR &capabilities);
+
+        void createImageViews();
     public:
         SwapChain(VkSurfaceKHR& surface);
         ~SwapChain();
@@ -43,7 +45,6 @@ namespace Hyades
         void query_swap_chain_support(VkPhysicalDevice device);
 
         void clean();
-
 
     };
         
