@@ -25,7 +25,6 @@ namespace Hyades
 
 
         std::vector<VkImage> swapChainImages;
-        VkFormat swapChainImageFormat;
         VkExtent2D swapChainExtent;
         std::vector<VkImageView> swapChainImageViews;
         std::vector<VkFramebuffer> swapChainFramebuffers;
@@ -39,6 +38,8 @@ namespace Hyades
     public:
         SwapChain(VkSurfaceKHR& surface);
         ~SwapChain();
+
+        VkFormat swapChainImageFormat;
 
         void create(VkPhysicalDevice physical_device, QueueFamilyIndices indices, VkDevice device);
 

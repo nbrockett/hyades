@@ -57,6 +57,10 @@ namespace Hyades
         // std::vector<VkImageView> swapChainImageViews;
         // std::vector<VkFramebuffer> swapChainFramebuffers;
 
+        VkRenderPass renderPass;
+
+
+
         const bool use_validation_layers = true;
 
         const std::vector<const char *> validationLayers = {
@@ -81,6 +85,7 @@ namespace Hyades
         void choose_physical_device();
         void create_logical_device();
         void create_swap_chain();
+        void create_render_pass();
 
         bool is_device_suitable(VkPhysicalDevice device);
         bool check_device_extension_support(VkPhysicalDevice device);
