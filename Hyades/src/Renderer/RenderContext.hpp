@@ -12,7 +12,7 @@
 #include "SwapChain.hpp"
 // #include "../Window.hpp"
 #include "QueueFamily.hpp"
-
+#include <fstream>
 namespace Hyades
 {
 
@@ -33,6 +33,26 @@ namespace Hyades
     //         return graphics_family.has_value() && present_family.has_value();
     //     }
     // };
+
+
+    static std::vector<char> readFile(const std::string& filename) 
+    {
+        std::ifstream file(filename, std::ios::ate | std::ios::binary);
+
+        if (!file.is_open()) {
+            throw std::runtime_error(std::string("failed to open file ") + filename);
+        }
+
+        size_t fileSize = (size_t) file.tellg();
+        std::vector<char> buffer(fileSize);
+
+        file.seekg(0);
+        file.read(buffer.data(), fileSize);
+
+        file.close();
+
+        return buffer;
+    }
 
     class Window;
 
@@ -58,7 +78,8 @@ namespace Hyades
         // std::vector<VkFramebuffer> swapChainFramebuffers;
 
         VkRenderPass renderPass;
-
+        VkPipelineLayout pipelineLayout;
+        VkPipeline graphicsPipeline;
 
 
         const bool use_validation_layers = true;
@@ -86,11 +107,14 @@ namespace Hyades
         void create_logical_device();
         void create_swap_chain();
         void create_render_pass();
+        void create_graphics_pipeline();
 
         bool is_device_suitable(VkPhysicalDevice device);
         bool check_device_extension_support(VkPhysicalDevice device);
         QueueFamilyIndices find_queue_families(VkPhysicalDevice device);
         SwapChainSupportDetails query_swap_chain_support(VkPhysicalDevice device);
+
+        VkShaderModule createShaderModule(const std::vector<char>& code);
 
         static void on_window_resize(uint32_t width, uint32_t height);
 
