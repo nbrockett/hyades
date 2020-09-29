@@ -26,8 +26,7 @@ namespace Hyades
 
         std::vector<VkImage> swapChainImages;
         
-        std::vector<VkImageView> swapChainImageViews;
-        std::vector<VkFramebuffer> swapChainFramebuffers;
+        
 
     protected:
         VkSurfaceFormatKHR chooseSwapSurfaceFormat(const std::vector<VkSurfaceFormatKHR> &availableFormats);
@@ -41,6 +40,10 @@ namespace Hyades
 
         VkFormat swapChainImageFormat;
         VkExtent2D swapChainExtent;
+
+        // TODO: move these to seperate location/class
+        std::vector<VkImageView> swapChainImageViews;
+        std::vector<VkFramebuffer> swapChainFramebuffers;
 
         void create(VkPhysicalDevice physical_device, QueueFamilyIndices indices, VkDevice device);
 

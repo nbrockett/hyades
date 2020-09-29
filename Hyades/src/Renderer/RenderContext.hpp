@@ -108,6 +108,7 @@ namespace Hyades
         void create_swap_chain();
         void create_render_pass();
         void create_graphics_pipeline();
+        void createFramebuffers(); 
 
         bool is_device_suitable(VkPhysicalDevice device);
         bool check_device_extension_support(VkPhysicalDevice device);
