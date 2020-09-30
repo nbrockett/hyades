@@ -114,6 +114,10 @@ namespace Hyades
 
         create_render_pass();
         create_graphics_pipeline();
+        create_framebuffers(); 
+        create_command_pool();
+        create_command_buffers();
+
     }
 
     bool RenderContext::check_validation_layer_support()
@@ -607,7 +611,7 @@ namespace Hyades
         return shaderModule;
     }
 
-    void RenderContext::createCommandPool() 
+    void RenderContext::create_command_pool() 
     {
         QueueFamilyIndices queue_familiy_indices = find_queue_families(m_physical_device);
 
@@ -620,7 +624,7 @@ namespace Hyades
         }
     }
 
-    void RenderContext::createCommandBuffers() 
+    void RenderContext::create_command_buffers() 
     {
         commandBuffers.resize(swapChain.swapChainFramebuffers.size());
 
@@ -667,7 +671,7 @@ namespace Hyades
         }
     }
 
-    void RenderContext::createFramebuffers() 
+    void RenderContext::create_framebuffers() 
     {
         swapChain.swapChainFramebuffers.resize(swapChain.swapChainImageViews.size());
 
