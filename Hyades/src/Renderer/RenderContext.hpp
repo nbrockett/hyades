@@ -116,6 +116,7 @@ namespace Hyades
         void create_graphics_pipeline();
         void createFramebuffers(); 
         void createCommandPool();
+        void createCommandBuffers();
 
         bool is_device_suitable(VkPhysicalDevice device);
         bool check_device_extension_support(VkPhysicalDevice device);
