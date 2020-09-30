@@ -77,9 +77,15 @@ namespace Hyades
         // std::vector<VkImageView> swapChainImageViews;
         // std::vector<VkFramebuffer> swapChainFramebuffers;
 
+        // TODO: move to different class
         VkRenderPass renderPass;
         VkPipelineLayout pipelineLayout;
         VkPipeline graphicsPipeline;
+
+        // add command pool and buffers
+        // TODO: move to different class
+        VkCommandPool commandPool;
+        std::vector<VkCommandBuffer> commandBuffers;
 
 
         const bool use_validation_layers = true;
@@ -109,6 +115,7 @@ namespace Hyades
         void create_render_pass();
         void create_graphics_pipeline();
         void createFramebuffers(); 
+        void createCommandPool();
 
         bool is_device_suitable(VkPhysicalDevice device);
         bool check_device_extension_support(VkPhysicalDevice device);

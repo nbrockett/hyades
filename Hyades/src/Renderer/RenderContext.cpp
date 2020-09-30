@@ -77,6 +77,9 @@ namespace Hyades
         vkDestroyPipelineLayout(m_device, pipelineLayout, nullptr);
         vkDestroyRenderPass(m_device, renderPass, nullptr);
 
+        vkDestroyCommandPool(m_device, commandPool, nullptr);
+        vkFreeCommandBuffers(m_device, commandPool, static_cast<uint32_t>(commandBuffers.size()), commandBuffers.data());
+        
         vkDestroyDevice(m_device, nullptr);
 
         // destroy vulkan debug messenger
@@ -600,6 +603,19 @@ namespace Hyades
         }
 
         return shaderModule;
+    }
+
+    void RenderContext::createCommandPool() 
+    {
+        QueueFamilyIndices queue_familiy_indices = find_queue_families(m_physical_device);
+
+        VkCommandPoolCreateInfo poolInfo{};
+        poolInfo.sType = VK_STRUCTURE_TYPE_COMMAND_POOL_CREATE_INFO;
+        poolInfo.queueFamilyIndex = queue_familiy_indices.graphics_family.value();
+
+        if (vkCreateCommandPool(m_device, &poolInfo, nullptr, &commandPool) != VK_SUCCESS) {
+            throw std::runtime_error("failed to create command pool!");
+        }
     }
 
     void RenderContext::createFramebuffers() 
