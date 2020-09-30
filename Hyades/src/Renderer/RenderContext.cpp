@@ -71,17 +71,17 @@ namespace Hyades
 
         // clean up swap chain
         // vkDestroySwapchainKHR(m_device, swapChain, nullptr);
-        swapChain.clean();
 
         vkFreeCommandBuffers(m_device, commandPool, static_cast<uint32_t>(commandBuffers.size()), commandBuffers.data());
 
         vkDestroyPipeline(m_device, graphicsPipeline, nullptr);
         vkDestroyPipelineLayout(m_device, pipelineLayout, nullptr);
         vkDestroyRenderPass(m_device, renderPass, nullptr);
+        
+        swapChain.clean();
 
-        
         vkDestroyCommandPool(m_device, commandPool, nullptr);
-        
+
         vkDestroyDevice(m_device, nullptr);
 
         // destroy vulkan debug messenger
