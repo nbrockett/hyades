@@ -52,7 +52,7 @@ namespace Hyades
         while (!glfwWindowShouldClose(m_window))
         {
             glfwPollEvents();
-            // m_render_context->render();
+            m_render_context->render();
         }
     }
 

@@ -111,7 +111,8 @@ namespace Hyades
 
     void RenderContext::render()
     {
-        Logger::s_logger->info("rendering context frame...");
+        drawFrame();
+        // Logger::s_logger->info("rendering context frame...");
     }
 
     void RenderContext::init()
