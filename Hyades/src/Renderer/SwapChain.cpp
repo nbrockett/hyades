@@ -1,8 +1,10 @@
 #include "SwapChain.hpp"
 
+
+
 namespace Hyades
 {
-    SwapChain::SwapChain(VkSurfaceKHR& surface) : m_surface(surface)
+    SwapChain::SwapChain(VkSurfaceKHR& surface, GLFWwindow *window) : m_surface(surface), m_window(window)
     {   }
 
     SwapChain::~SwapChain()
@@ -65,24 +67,24 @@ namespace Hyades
     VkExtent2D SwapChain::chooseSwapExtent(const VkSurfaceCapabilitiesKHR &capabilities)
     {
 
-        return capabilities.currentExtent;
+        // return capabilities.currentExtent;
         // if (capabilities.currentExtent.width != UINT32_MAX)
         // {
         //     return capabilities.currentExtent;
         // }
         // else
         // {
-        //     int width, height;
-        //     glfwGetFramebufferSize(m_window, &width, &height);
+        int width, height;
+        glfwGetFramebufferSize(m_window, &width, &height);
 
-        //     VkExtent2D actualExtent = {
-        //         static_cast<uint32_t>(width),
-        //         static_cast<uint32_t>(height)};
+        VkExtent2D actualExtent = {
+            static_cast<uint32_t>(width),
+            static_cast<uint32_t>(height)};
 
-        //     actualExtent.width = std::max(capabilities.minImageExtent.width, std::min(capabilities.maxImageExtent.width, actualExtent.width));
-        //     actualExtent.height = std::max(capabilities.minImageExtent.height, std::min(capabilities.maxImageExtent.height, actualExtent.height));
+        actualExtent.width = std::max(capabilities.minImageExtent.width, std::min(capabilities.maxImageExtent.width, actualExtent.width));
+        actualExtent.height = std::max(capabilities.minImageExtent.height, std::min(capabilities.maxImageExtent.height, actualExtent.height));
 
-        //     return actualExtent;
+        return actualExtent;
         // }
     }
 
@@ -141,7 +143,8 @@ namespace Hyades
         vkGetSwapchainImagesKHR(device, swapChain, &imageCount, swapChainImages.data());
 
         swapChainImageFormat = surfaceFormat.format;
-
+        swapChainExtent = extent;
+        
         createImageViews();
     }
 

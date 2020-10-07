@@ -61,7 +61,7 @@ namespace Hyades
         return VK_FALSE;
     }
 
-    RenderContext::RenderContext(GLFWwindow *window) : m_window(window), swapChain(m_surface)
+    RenderContext::RenderContext(GLFWwindow *window) : m_window(window), swapChain(m_surface, window)
     {
     }
 

@@ -3,6 +3,7 @@
 #include <vulkan/vulkan.h>
 #include "../HyadesPCH.hpp"
 #include "QueueFamily.hpp"
+#include "GLFW/glfw3.h"
 
 namespace Hyades
 {
@@ -19,6 +20,7 @@ namespace Hyades
     private:
         const VkSurfaceKHR& m_surface;
         VkDevice m_device;
+        GLFWwindow *m_window;
 
         VkSwapchainKHR swapChain;
         SwapChainSupportDetails swapChainSupport;
@@ -35,7 +37,7 @@ namespace Hyades
 
         void createImageViews();
     public:
-        SwapChain(VkSurfaceKHR& surface);
+        SwapChain(VkSurfaceKHR& surface, GLFWwindow *window);
         ~SwapChain();
 
         VkFormat swapChainImageFormat;
