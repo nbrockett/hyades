@@ -124,6 +124,10 @@ namespace Hyades
         void create_command_buffers();
         void create_sync_objects();
 
+        void recreateSwapChain();
+
+        void drawFrame();
+
         bool is_device_suitable(VkPhysicalDevice device);
         bool check_device_extension_support(VkPhysicalDevice device);
         QueueFamilyIndices find_queue_families(VkPhysicalDevice device);

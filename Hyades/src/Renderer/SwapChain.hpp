@@ -22,7 +22,7 @@ namespace Hyades
         VkDevice m_device;
         GLFWwindow *m_window;
 
-        VkSwapchainKHR swapChain;
+        
         SwapChainSupportDetails swapChainSupport;
 
 
@@ -39,6 +39,8 @@ namespace Hyades
     public:
         SwapChain(VkSurfaceKHR& surface, GLFWwindow *window);
         ~SwapChain();
+
+        VkSwapchainKHR swapChain;
 
         VkFormat swapChainImageFormat;
         VkExtent2D swapChainExtent;
