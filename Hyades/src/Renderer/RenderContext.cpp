@@ -6,8 +6,12 @@
 
 #include "../HyadesPCH.hpp"
 
+
+
 namespace Hyades
 {
+
+    const int MAX_FRAMES_IN_FLIGHT = 2;
 
     VkResult create_debug_messenger(VkInstance instance, const VkDebugUtilsMessengerCreateInfoEXT *pCreateInfo, const VkAllocationCallbacks *pAllocator, VkDebugUtilsMessengerEXT *pDebugMessenger)
     {
@@ -80,6 +84,12 @@ namespace Hyades
         
         swapChain.clean();
 
+        for (size_t i = 0; i < MAX_FRAMES_IN_FLIGHT; i++) {
+            vkDestroySemaphore(m_device, renderFinishedSemaphores[i], nullptr);
+            vkDestroySemaphore(m_device, imageAvailableSemaphores[i], nullptr);
+            vkDestroyFence(m_device, inFlightFences[i], nullptr);
+        }
+
         vkDestroyCommandPool(m_device, commandPool, nullptr);
 
         vkDestroyDevice(m_device, nullptr);
@@ -117,7 +127,7 @@ namespace Hyades
         create_framebuffers(); 
         create_command_pool();
         create_command_buffers();
-
+        create_sync_objects();
     }
 
     bool RenderContext::check_validation_layer_support()
@@ -696,6 +706,27 @@ namespace Hyades
     }
 
 
+    void RenderContext::create_sync_objects() 
+    {
+        imageAvailableSemaphores.resize(MAX_FRAMES_IN_FLIGHT);
+        renderFinishedSemaphores.resize(MAX_FRAMES_IN_FLIGHT);
+        inFlightFences.resize(MAX_FRAMES_IN_FLIGHT);
+        imagesInFlight.resize(swapChain.swapChainImages.size(), VK_NULL_HANDLE);
 
+        VkSemaphoreCreateInfo semaphoreInfo{};
+        semaphoreInfo.sType = VK_STRUCTURE_TYPE_SEMAPHORE_CREATE_INFO;
+
+        VkFenceCreateInfo fenceInfo{};
+        fenceInfo.sType = VK_STRUCTURE_TYPE_FENCE_CREATE_INFO;
+        fenceInfo.flags = VK_FENCE_CREATE_SIGNALED_BIT;
+
+        for (size_t i = 0; i < MAX_FRAMES_IN_FLIGHT; i++) {
+            if (vkCreateSemaphore(m_device, &semaphoreInfo, nullptr, &imageAvailableSemaphores[i]) != VK_SUCCESS ||
+                vkCreateSemaphore(m_device, &semaphoreInfo, nullptr, &renderFinishedSemaphores[i]) != VK_SUCCESS ||
+                vkCreateFence(m_device, &fenceInfo, nullptr, &inFlightFences[i]) != VK_SUCCESS) {
+                throw std::runtime_error("failed to create synchronization objects for a frame!");
+            }
+        }
+    }
 
 } // namespace Hyades

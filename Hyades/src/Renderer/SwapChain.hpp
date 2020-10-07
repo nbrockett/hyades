@@ -24,7 +24,7 @@ namespace Hyades
         SwapChainSupportDetails swapChainSupport;
 
 
-        std::vector<VkImage> swapChainImages;
+        
         
         
 
@@ -44,6 +44,9 @@ namespace Hyades
         // TODO: move these to seperate location/class
         std::vector<VkImageView> swapChainImageViews;
         std::vector<VkFramebuffer> swapChainFramebuffers;
+
+        std::vector<VkImage> swapChainImages;
+
 
         void create(VkPhysicalDevice physical_device, QueueFamilyIndices indices, VkDevice device);
 

@@ -87,6 +87,11 @@ namespace Hyades
         VkCommandPool commandPool;
         std::vector<VkCommandBuffer> commandBuffers;
 
+        // TODO: move to a different class
+        std::vector<VkSemaphore> imageAvailableSemaphores;
+        std::vector<VkSemaphore> renderFinishedSemaphores;
+        std::vector<VkFence> inFlightFences;
+        std::vector<VkFence> imagesInFlight;
 
         const bool use_validation_layers = true;
 
@@ -117,6 +122,7 @@ namespace Hyades
         void create_framebuffers(); 
         void create_command_pool();
         void create_command_buffers();
+        void create_sync_objects();
 
         bool is_device_suitable(VkPhysicalDevice device);
         bool check_device_extension_support(VkPhysicalDevice device);
