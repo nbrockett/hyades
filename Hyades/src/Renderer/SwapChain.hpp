@@ -44,7 +44,7 @@ namespace Hyades
         std::vector<VkImageView> swapChainImageViews;
         std::vector<VkFramebuffer> swapChainFramebuffers;
 
-        std::vector<VkImage> swapChainImages;
+        std::vector<VkImage> m_swap_chain_images;
 
 
         void create_image_views();

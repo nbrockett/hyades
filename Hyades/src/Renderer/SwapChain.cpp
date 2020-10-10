@@ -139,8 +139,8 @@ namespace Hyades
         }
 
         vkGetSwapchainImagesKHR(device, swapChain, &imageCount, nullptr);
-        swapChainImages.resize(imageCount);
-        vkGetSwapchainImagesKHR(device, swapChain, &imageCount, swapChainImages.data());
+        m_swap_chain_images.resize(imageCount);
+        vkGetSwapchainImagesKHR(device, swapChain, &imageCount, m_swap_chain_images.data());
 
         swapChainImageFormat = surfaceFormat.format;
         swapChainExtent = extent;
@@ -148,13 +148,14 @@ namespace Hyades
         create_image_views();
     }
 
-    void SwapChain::create_image_views() {
-        swapChainImageViews.resize(swapChainImages.size());
+    void SwapChain::create_image_views() 
+    {
+        swapChainImageViews.resize(m_swap_chain_images.size());
 
-        for (size_t i = 0; i < swapChainImages.size(); i++) {
+        for (size_t i = 0; i < m_swap_chain_images.size(); i++) {
             VkImageViewCreateInfo createInfo{};
             createInfo.sType = VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO;
-            createInfo.image = swapChainImages[i];
+            createInfo.image = m_swap_chain_images[i];
             createInfo.viewType = VK_IMAGE_VIEW_TYPE_2D;
             createInfo.format = swapChainImageFormat;
             createInfo.components.r = VK_COMPONENT_SWIZZLE_IDENTITY;
