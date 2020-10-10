@@ -53,6 +53,7 @@ namespace Hyades
 
         void clean();
 
+        void create_framebuffers(const VkRenderPass& render_pass);
 
     private:
         const VkSurfaceKHR& m_surface;

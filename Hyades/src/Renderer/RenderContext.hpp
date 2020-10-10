@@ -111,7 +111,6 @@ namespace Hyades
         void create_swap_chain();
         void create_render_pass();
         void create_graphics_pipeline();
-        void create_framebuffers(); 
         void create_command_pool();
         void create_command_buffers();
         void create_sync_objects();

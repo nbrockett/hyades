@@ -126,7 +126,7 @@ namespace Hyades
 
         create_render_pass();
         create_graphics_pipeline();
-        create_framebuffers(); 
+        swapChain.create_framebuffers(renderPass); 
         create_command_pool();
         create_command_buffers();
         create_sync_objects();
@@ -683,30 +683,6 @@ namespace Hyades
         }
     }
 
-    void RenderContext::create_framebuffers() 
-    {
-        swapChain.swapChainFramebuffers.resize(swapChain.swapChainImageViews.size());
-
-        for (size_t i = 0; i < swapChain.swapChainImageViews.size(); i++) {
-            VkImageView attachments[] = {
-                swapChain.swapChainImageViews[i]
-            };
-
-            VkFramebufferCreateInfo framebufferInfo{};
-            framebufferInfo.sType = VK_STRUCTURE_TYPE_FRAMEBUFFER_CREATE_INFO;
-            framebufferInfo.renderPass = renderPass;
-            framebufferInfo.attachmentCount = 1;
-            framebufferInfo.pAttachments = attachments;
-            framebufferInfo.width = swapChain.swapChainExtent.width;
-            framebufferInfo.height = swapChain.swapChainExtent.height;
-            framebufferInfo.layers = 1;
-
-            if (vkCreateFramebuffer(m_device, &framebufferInfo, nullptr, &swapChain.swapChainFramebuffers[i]) != VK_SUCCESS) {
-                throw std::runtime_error("failed to create framebuffer!");
-            }
-        }
-    }
-
 
     void RenderContext::create_sync_objects() 
     {
@@ -744,10 +720,10 @@ namespace Hyades
         swapChain.clean();
 
         create_swap_chain();
-        // create_image_views();
+        swapChain.create_image_views();
         create_render_pass();
         create_graphics_pipeline();
-        create_framebuffers();
+        swapChain.create_framebuffers(renderPass);
         create_command_buffers();
     }
 
