@@ -5,7 +5,8 @@ add_library(Hyades SHARED
             src/Window.cpp
             src/Renderer/Renderer.cpp
             src/Renderer/RenderContext.cpp
-            src/Renderer/SwapChain.cpp)
+            src/Renderer/SwapChain.cpp
+            src/Renderer/FrameBuffer.cpp)
 
 find_package(Vulkan REQUIRED FATAL_ERROR)
 
