@@ -68,21 +68,13 @@ namespace Hyades
         VkQueue m_graphics_queue;
         VkQueue m_present_queue;
 
-        // swap chain vars
         SwapChain swapChain;
-        // VkSwapchainKHR swapChain;
-        // std::vector<VkImage> swapChainImages;
-        // VkFormat swapChainImageFormat;
-        // VkExtent2D swapChainExtent;
-        // std::vector<VkImageView> swapChainImageViews;
-        // std::vector<VkFramebuffer> swapChainFramebuffers;
 
         // TODO: move to different class
         VkRenderPass renderPass;
         VkPipelineLayout pipelineLayout;
         VkPipeline graphicsPipeline;
 
-        // add command pool and buffers
         // TODO: move to different class
         VkCommandPool commandPool;
         std::vector<VkCommandBuffer> commandBuffers;
