@@ -638,7 +638,7 @@ namespace Hyades
 
     void RenderContext::create_command_buffers() 
     {
-        commandBuffers.resize(swapChain.swapChainFramebuffers.size());
+        commandBuffers.resize(swapChain.m_swapchain_framebuffers.size());
 
         VkCommandBufferAllocateInfo allocInfo{};
         allocInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;
@@ -661,7 +661,7 @@ namespace Hyades
             VkRenderPassBeginInfo renderPassInfo{};
             renderPassInfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO;
             renderPassInfo.renderPass = renderPass;
-            renderPassInfo.framebuffer = swapChain.swapChainFramebuffers[i];
+            renderPassInfo.framebuffer = swapChain.m_swapchain_framebuffers[i];
             renderPassInfo.renderArea.offset = {0, 0};
             renderPassInfo.renderArea.extent = swapChain.swapChainExtent;
 
@@ -689,7 +689,7 @@ namespace Hyades
         imageAvailableSemaphores.resize(MAX_FRAMES_IN_FLIGHT);
         renderFinishedSemaphores.resize(MAX_FRAMES_IN_FLIGHT);
         inFlightFences.resize(MAX_FRAMES_IN_FLIGHT);
-        imagesInFlight.resize(swapChain.m_swap_chain_images.size(), VK_NULL_HANDLE);
+        imagesInFlight.resize(swapChain.m_swapchain_images.size(), VK_NULL_HANDLE);
 
         VkSemaphoreCreateInfo semaphoreInfo{};
         semaphoreInfo.sType = VK_STRUCTURE_TYPE_SEMAPHORE_CREATE_INFO;

@@ -41,10 +41,10 @@ namespace Hyades
         VkExtent2D swapChainExtent;
 
         // TODO: move these to seperate location/class
-        std::vector<VkImageView> swapChainImageViews;
-        std::vector<VkFramebuffer> swapChainFramebuffers;
+        std::vector<VkImageView> m_swapchain_imageviews;
+        std::vector<VkFramebuffer> m_swapchain_framebuffers;
 
-        std::vector<VkImage> m_swap_chain_images;
+        std::vector<VkImage> m_swapchain_images;
 
 
         void create_image_views();
