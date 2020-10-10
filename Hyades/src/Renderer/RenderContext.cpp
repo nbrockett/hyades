@@ -744,7 +744,7 @@ namespace Hyades
         swapChain.clean();
 
         create_swap_chain();
-        // createImageViews();
+        // create_image_views();
         create_render_pass();
         create_graphics_pipeline();
         create_framebuffers();

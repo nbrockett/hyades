@@ -145,10 +145,10 @@ namespace Hyades
         swapChainImageFormat = surfaceFormat.format;
         swapChainExtent = extent;
         
-        createImageViews();
+        create_image_views();
     }
 
-    void SwapChain::createImageViews() {
+    void SwapChain::create_image_views() {
         swapChainImageViews.resize(swapChainImages.size());
 
         for (size_t i = 0; i < swapChainImages.size(); i++) {
