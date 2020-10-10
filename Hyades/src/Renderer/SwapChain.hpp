@@ -1,3 +1,10 @@
+// SwapChain
+//
+// The swap chain own the image buffer and synchronisies their presentation
+//
+
+
+
 #pragma once
 
 #include <vulkan/vulkan.h>
@@ -22,13 +29,7 @@ namespace Hyades
         VkDevice m_device;
         GLFWwindow *m_window;
 
-        
         SwapChainSupportDetails swapChainSupport;
-
-
-        
-        
-        
 
     protected:
         VkSurfaceFormatKHR chooseSwapSurfaceFormat(const std::vector<VkSurfaceFormatKHR> &availableFormats);
