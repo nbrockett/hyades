@@ -8,7 +8,9 @@ namespace Hyades
     {   }
 
     SwapChain::~SwapChain()
-    {   }
+    {   
+        clean();
+    }
 
     void SwapChain::query_swap_chain_support(VkPhysicalDevice device)
     {
@@ -212,6 +214,18 @@ namespace Hyades
             }
         }
     }
+
+    void SwapChain::recreate(const VkExtent2D& extent)
+    {
+        
+        if (swapChainExtent.width != extent.width || swapChainExtent.height != extent.height)
+        {
+            swapChainExtent = extent;
+        }
+
+        create_image_views();
+    }
+
 
 }
 

@@ -35,7 +35,7 @@ namespace Hyades
         VkPresentModeKHR chooseSwapPresentMode(const std::vector<VkPresentModeKHR> &availablePresentModes);
         VkExtent2D chooseSwapExtent(const VkSurfaceCapabilitiesKHR &capabilities);
 
-        VkSwapchainKHR swapChain;
+        VkSwapchainKHR swapChain = VK_NULL_HANDLE;
 
         VkFormat swapChainImageFormat;
         VkExtent2D swapChainExtent;
@@ -54,6 +54,8 @@ namespace Hyades
         void clean();
 
         void create_framebuffers(const VkRenderPass& render_pass);
+
+        void recreate(const VkExtent2D& extent);
 
     private:
         const VkSurfaceKHR& m_surface;
