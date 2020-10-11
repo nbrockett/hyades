@@ -259,33 +259,6 @@ namespace Hyades
         }
     }
 
-    SwapChainSupportDetails RenderContext::query_swap_chain_support(VkPhysicalDevice device)
-    {
-        SwapChainSupportDetails details;
-
-        vkGetPhysicalDeviceSurfaceCapabilitiesKHR(device, m_surface, &details.capabilities);
-
-        uint32_t formatCount;
-        vkGetPhysicalDeviceSurfaceFormatsKHR(device, m_surface, &formatCount, nullptr);
-
-        if (formatCount != 0)
-        {
-            details.formats.resize(formatCount);
-            vkGetPhysicalDeviceSurfaceFormatsKHR(device, m_surface, &formatCount, details.formats.data());
-        }
-
-        uint32_t presentModeCount;
-        vkGetPhysicalDeviceSurfacePresentModesKHR(device, m_surface, &presentModeCount, nullptr);
-
-        if (presentModeCount != 0)
-        {
-            details.presentModes.resize(presentModeCount);
-            vkGetPhysicalDeviceSurfacePresentModesKHR(device, m_surface, &presentModeCount, details.presentModes.data());
-        }
-
-        return details;
-    }
-
     bool RenderContext::is_device_suitable(VkPhysicalDevice device)
     {
         QueueFamilyIndices indices = find_queue_families(device);
@@ -295,7 +268,7 @@ namespace Hyades
         bool swapChainAdequate = false;
         if (extensionsSupported)
         {
-            SwapChainSupportDetails swapChainSupport = query_swap_chain_support(device);
+            SwapChainSupportDetails swapChainSupport = swapChain.query_swap_chain_support(device);
             swapChainAdequate = !swapChainSupport.formats.empty() && !swapChainSupport.presentModes.empty();
         }
 

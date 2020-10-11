@@ -12,7 +12,7 @@ namespace Hyades
         clean();
     }
 
-    void SwapChain::query_swap_chain_support(VkPhysicalDevice device)
+    SwapChainSupportDetails SwapChain::query_swap_chain_support(VkPhysicalDevice device)
     {
         SwapChainSupportDetails details;
 
@@ -36,12 +36,13 @@ namespace Hyades
             vkGetPhysicalDeviceSurfacePresentModesKHR(device, m_surface, &presentModeCount, details.presentModes.data());
         }
 
-        swapChainSupport = details;
+        // swapChainSupport = details;
+        return details;
     }
 
-    VkSurfaceFormatKHR SwapChain::chooseSwapSurfaceFormat(const std::vector<VkSurfaceFormatKHR> &availableFormats)
+    VkSurfaceFormatKHR SwapChain::choose_surface_format(const std::vector<VkSurfaceFormatKHR> &available_formats)
     {
-        for (const auto &availableFormat : availableFormats)
+        for (const auto &availableFormat : available_formats)
         {
             if (availableFormat.format == VK_FORMAT_B8G8R8A8_SRGB && availableFormat.colorSpace == VK_COLOR_SPACE_SRGB_NONLINEAR_KHR)
             {
@@ -49,12 +50,12 @@ namespace Hyades
             }
         }
 
-        return availableFormats[0];
+        return available_formats[0];
     }
 
-    VkPresentModeKHR SwapChain::chooseSwapPresentMode(const std::vector<VkPresentModeKHR> &availablePresentModes)
+    VkPresentModeKHR SwapChain::choose_present_mode(const std::vector<VkPresentModeKHR> &available_present_modes)
     {
-        for (const auto &availablePresentMode : availablePresentModes)
+        for (const auto &availablePresentMode : available_present_modes)
         {
             if (availablePresentMode == VK_PRESENT_MODE_MAILBOX_KHR)
             {
@@ -66,14 +67,12 @@ namespace Hyades
     }
 
 
-    VkExtent2D SwapChain::chooseSwapExtent(const VkSurfaceCapabilitiesKHR &capabilities)
+    VkExtent2D SwapChain::choose_extent(const VkSurfaceCapabilitiesKHR &capabilities)
     {
 
         // return capabilities.currentExtent;
         if (capabilities.currentExtent.width != UINT32_MAX)
         {
-            Hyades::Logger::s_logger->error(std::string("Current width extent: ") + std::to_string(capabilities.currentExtent.width));
-            Hyades::Logger::s_logger->error(std::string("Current height extent: ") + std::to_string(capabilities.currentExtent.height));
             return capabilities.currentExtent;
         }
         else
@@ -88,9 +87,6 @@ namespace Hyades
             actualExtent.width = std::max(capabilities.minImageExtent.width, std::min(capabilities.maxImageExtent.width, actualExtent.width));
             actualExtent.height = std::max(capabilities.minImageExtent.height, std::min(capabilities.maxImageExtent.height, actualExtent.height));
 
-            Hyades::Logger::s_logger->error(std::string("ELSE: Actual width extent: ") + std::to_string(actualExtent.width));
-            Hyades::Logger::s_logger->error(std::string("ELSE: Actual height extent: ") + std::to_string(actualExtent.height));
-
             return actualExtent;
         }
     }
@@ -99,48 +95,48 @@ namespace Hyades
     {
 
         m_device = device;
-        query_swap_chain_support(physical_device);
+        swap_chain_support = query_swap_chain_support(physical_device);
 
-        VkSurfaceFormatKHR surfaceFormat = chooseSwapSurfaceFormat(swapChainSupport.formats);
-        VkPresentModeKHR presentMode = chooseSwapPresentMode(swapChainSupport.presentModes);
-        VkExtent2D extent = chooseSwapExtent(swapChainSupport.capabilities);
+        VkSurfaceFormatKHR surfaceFormat = choose_surface_format(swap_chain_support.formats);
+        VkPresentModeKHR presentMode = choose_present_mode(swap_chain_support.presentModes);
+        VkExtent2D extent = choose_extent(swap_chain_support.capabilities);
 
-        uint32_t imageCount = swapChainSupport.capabilities.minImageCount + 1;
-        if (swapChainSupport.capabilities.maxImageCount > 0 && imageCount > swapChainSupport.capabilities.maxImageCount)
+        uint32_t imageCount = swap_chain_support.capabilities.minImageCount + 1;
+        if (swap_chain_support.capabilities.maxImageCount > 0 && imageCount > swap_chain_support.capabilities.maxImageCount)
         {
-            imageCount = swapChainSupport.capabilities.maxImageCount;
+            imageCount = swap_chain_support.capabilities.maxImageCount;
         }
 
-        VkSwapchainCreateInfoKHR createInfo{};
-        createInfo.sType = VK_STRUCTURE_TYPE_SWAPCHAIN_CREATE_INFO_KHR;
-        createInfo.surface = m_surface;
+        VkSwapchainCreateInfoKHR swap_chain_create_info{};
+        swap_chain_create_info.sType = VK_STRUCTURE_TYPE_SWAPCHAIN_CREATE_INFO_KHR;
+        swap_chain_create_info.surface = m_surface;
 
-        createInfo.minImageCount = imageCount;
-        createInfo.imageFormat = surfaceFormat.format;
-        createInfo.imageColorSpace = surfaceFormat.colorSpace;
-        createInfo.imageExtent = extent;
-        createInfo.imageArrayLayers = 1;
-        createInfo.imageUsage = VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT;
+        swap_chain_create_info.minImageCount = imageCount;
+        swap_chain_create_info.imageFormat = surfaceFormat.format;
+        swap_chain_create_info.imageColorSpace = surfaceFormat.colorSpace;
+        swap_chain_create_info.imageExtent = extent;
+        swap_chain_create_info.imageArrayLayers = 1;
+        swap_chain_create_info.imageUsage = VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT;
 
         uint32_t queueFamilyIndices[] = {indices.graphics_family.value(), indices.present_family.value()};
 
         if (indices.graphics_family != indices.present_family)
         {
-            createInfo.imageSharingMode = VK_SHARING_MODE_CONCURRENT;
-            createInfo.queueFamilyIndexCount = 2;
-            createInfo.pQueueFamilyIndices = queueFamilyIndices;
+            swap_chain_create_info.imageSharingMode = VK_SHARING_MODE_CONCURRENT;
+            swap_chain_create_info.queueFamilyIndexCount = 2;
+            swap_chain_create_info.pQueueFamilyIndices = queueFamilyIndices;
         }
         else
         {
-            createInfo.imageSharingMode = VK_SHARING_MODE_EXCLUSIVE;
+            swap_chain_create_info.imageSharingMode = VK_SHARING_MODE_EXCLUSIVE;
         }
 
-        createInfo.preTransform = swapChainSupport.capabilities.currentTransform;
-        createInfo.compositeAlpha = VK_COMPOSITE_ALPHA_OPAQUE_BIT_KHR;
-        createInfo.presentMode = presentMode;
-        createInfo.clipped = VK_TRUE;
+        swap_chain_create_info.preTransform = swap_chain_support.capabilities.currentTransform;
+        swap_chain_create_info.compositeAlpha = VK_COMPOSITE_ALPHA_OPAQUE_BIT_KHR;
+        swap_chain_create_info.presentMode = presentMode;
+        swap_chain_create_info.clipped = VK_TRUE;
 
-        if (vkCreateSwapchainKHR(device, &createInfo, nullptr, &swapChain) != VK_SUCCESS)
+        if (vkCreateSwapchainKHR(device, &swap_chain_create_info, nullptr, &swapChain) != VK_SUCCESS)
         {
             throw std::runtime_error("failed to create swap chain!");
         }
@@ -161,22 +157,25 @@ namespace Hyades
 
         for (size_t i = 0; i < m_images.size(); i++) 
         {
-            VkImageViewCreateInfo createInfo{};
-            createInfo.sType = VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO;
-            createInfo.image = m_images[i];
-            createInfo.viewType = VK_IMAGE_VIEW_TYPE_2D;
-            createInfo.format = swapChainImageFormat;
-            createInfo.components.r = VK_COMPONENT_SWIZZLE_IDENTITY;
-            createInfo.components.g = VK_COMPONENT_SWIZZLE_IDENTITY;
-            createInfo.components.b = VK_COMPONENT_SWIZZLE_IDENTITY;
-            createInfo.components.a = VK_COMPONENT_SWIZZLE_IDENTITY;
-            createInfo.subresourceRange.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
-            createInfo.subresourceRange.baseMipLevel = 0;
-            createInfo.subresourceRange.levelCount = 1;
-            createInfo.subresourceRange.baseArrayLayer = 0;
-            createInfo.subresourceRange.layerCount = 1;
+            VkImageViewCreateInfo imageview_create_info{};
+            imageview_create_info.sType = VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO;
+            imageview_create_info.image = m_images[i];
+            
+            imageview_create_info.viewType = VK_IMAGE_VIEW_TYPE_2D;
+            imageview_create_info.format = swapChainImageFormat;
 
-            if (vkCreateImageView(m_device, &createInfo, nullptr, &m_imageviews[i]) != VK_SUCCESS) 
+            imageview_create_info.components.r = VK_COMPONENT_SWIZZLE_IDENTITY;
+            imageview_create_info.components.g = VK_COMPONENT_SWIZZLE_IDENTITY;
+            imageview_create_info.components.b = VK_COMPONENT_SWIZZLE_IDENTITY;
+            imageview_create_info.components.a = VK_COMPONENT_SWIZZLE_IDENTITY;
+            
+            imageview_create_info.subresourceRange.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
+            imageview_create_info.subresourceRange.baseMipLevel = 0;
+            imageview_create_info.subresourceRange.levelCount = 1;
+            imageview_create_info.subresourceRange.baseArrayLayer = 0;
+            imageview_create_info.subresourceRange.layerCount = 1;
+
+            if (vkCreateImageView(m_device, &imageview_create_info, nullptr, &m_imageviews[i]) != VK_SUCCESS) 
             {
                 throw std::runtime_error("failed to create image views!");
             }
@@ -187,11 +186,10 @@ namespace Hyades
     {
         for (auto imageview : m_imageviews) 
         {
-            vkDestroyImageView(m_device, imageview, nullptr);
-            // if (imageview != VK_NULL_HANDLE)
-            // {
-            //     vkDestroyImageView(m_device, imageview, nullptr);
-            // }
+            if (imageview != VK_NULL_HANDLE)
+            {
+                vkDestroyImageView(m_device, imageview, nullptr);
+            }
         }
         
         if (swapChain != VK_NULL_HANDLE)
@@ -233,7 +231,6 @@ namespace Hyades
 
         create_image_views();
     }
-
 
 }
 

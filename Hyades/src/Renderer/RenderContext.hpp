@@ -124,7 +124,7 @@ namespace Hyades
         bool is_device_suitable(VkPhysicalDevice device);
         bool check_device_extension_support(VkPhysicalDevice device);
         QueueFamilyIndices find_queue_families(VkPhysicalDevice device);
-        SwapChainSupportDetails query_swap_chain_support(VkPhysicalDevice device);
+        // SwapChainSupportDetails query_swap_chain_support(VkPhysicalDevice device);
 
         VkShaderModule createShaderModule(const std::vector<char>& code);
 

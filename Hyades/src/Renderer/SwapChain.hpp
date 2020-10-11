@@ -30,10 +30,16 @@ namespace Hyades
         ~SwapChain();
 
         void create(VkPhysicalDevice physical_device, QueueFamilyIndices indices, VkDevice device);
+        void recreate(const VkExtent2D& extent);
 
-        VkSurfaceFormatKHR chooseSwapSurfaceFormat(const std::vector<VkSurfaceFormatKHR> &availableFormats);
-        VkPresentModeKHR chooseSwapPresentMode(const std::vector<VkPresentModeKHR> &availablePresentModes);
-        VkExtent2D chooseSwapExtent(const VkSurfaceCapabilitiesKHR &capabilities);
+        void create_image_views();
+        void create_framebuffers(const VkRenderPass& render_pass);
+        SwapChainSupportDetails query_swap_chain_support(VkPhysicalDevice device);
+        void clean();
+        
+        VkSurfaceFormatKHR choose_surface_format(const std::vector<VkSurfaceFormatKHR> &available_formats);
+        VkPresentModeKHR choose_present_mode(const std::vector<VkPresentModeKHR> &available_present_modes);
+        VkExtent2D choose_extent(const VkSurfaceCapabilitiesKHR &capabilities);
 
         VkSwapchainKHR swapChain = VK_NULL_HANDLE;
 
@@ -46,23 +52,12 @@ namespace Hyades
 
         std::vector<VkImage> m_images;
 
-
-        void create_image_views();
-
-        void query_swap_chain_support(VkPhysicalDevice device);
-
-        void clean();
-
-        void create_framebuffers(const VkRenderPass& render_pass);
-
-        void recreate(const VkExtent2D& extent);
-
     private:
         const VkSurfaceKHR& m_surface;
         VkDevice m_device;
         GLFWwindow *m_window;
 
-        SwapChainSupportDetails swapChainSupport;
+        SwapChainSupportDetails swap_chain_support;
     };
         
 } // namespace Hyades
