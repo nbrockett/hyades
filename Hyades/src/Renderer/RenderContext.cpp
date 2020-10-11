@@ -74,8 +74,12 @@ namespace Hyades
     {
         Hyades::Logger::s_logger->debug("Destroying Render Context");
 
-        // clean up swap chain
-        // vkDestroySwapchainKHR(m_device, swapChain, nullptr);
+        for (auto framebuffer : swapChain.m_framebuffers) 
+        {
+            vkDestroyFramebuffer(m_device, framebuffer, nullptr);
+        }
+
+        swapChain.clean();
 
         vkFreeCommandBuffers(m_device, commandPool, static_cast<uint32_t>(commandBuffers.size()), commandBuffers.data());
 
@@ -83,7 +87,7 @@ namespace Hyades
         vkDestroyPipelineLayout(m_device, pipelineLayout, nullptr);
         vkDestroyRenderPass(m_device, renderPass, nullptr);
         
-        swapChain.clean();
+        
 
         for (size_t i = 0; i < MAX_FRAMES_IN_FLIGHT; i++) {
             vkDestroySemaphore(m_device, renderFinishedSemaphores[i], nullptr);
@@ -638,7 +642,7 @@ namespace Hyades
 
     void RenderContext::create_command_buffers() 
     {
-        commandBuffers.resize(swapChain.m_swapchain_framebuffers.size());
+        commandBuffers.resize(swapChain.m_framebuffers.size());
 
         VkCommandBufferAllocateInfo allocInfo{};
         allocInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;
@@ -661,7 +665,7 @@ namespace Hyades
             VkRenderPassBeginInfo renderPassInfo{};
             renderPassInfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO;
             renderPassInfo.renderPass = renderPass;
-            renderPassInfo.framebuffer = swapChain.m_swapchain_framebuffers[i];
+            renderPassInfo.framebuffer = swapChain.m_framebuffers[i];
             renderPassInfo.renderArea.offset = {0, 0};
             renderPassInfo.renderArea.extent = swapChain.swapChainExtent;
 
@@ -689,7 +693,7 @@ namespace Hyades
         imageAvailableSemaphores.resize(MAX_FRAMES_IN_FLIGHT);
         renderFinishedSemaphores.resize(MAX_FRAMES_IN_FLIGHT);
         inFlightFences.resize(MAX_FRAMES_IN_FLIGHT);
-        imagesInFlight.resize(swapChain.m_swapchain_images.size(), VK_NULL_HANDLE);
+        imagesInFlight.resize(swapChain.m_images.size(), VK_NULL_HANDLE);
 
         VkSemaphoreCreateInfo semaphoreInfo{};
         semaphoreInfo.sType = VK_STRUCTURE_TYPE_SEMAPHORE_CREATE_INFO;
@@ -727,7 +731,8 @@ namespace Hyades
         create_command_buffers();
     }
 
-    void RenderContext::drawFrame() {
+    void RenderContext::drawFrame() 
+    {
         vkWaitForFences(m_device, 1, &inFlightFences[currentFrame], VK_TRUE, UINT64_MAX);
 
         uint32_t imageIndex;

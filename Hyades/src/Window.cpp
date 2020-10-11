@@ -54,6 +54,8 @@ namespace Hyades
             glfwPollEvents();
             m_render_context->render();
         }
+
+        vkDeviceWaitIdle(m_render_context->m_device);
     }
 
     void Window::on_window_resize(GLFWwindow* window, int width, int height)

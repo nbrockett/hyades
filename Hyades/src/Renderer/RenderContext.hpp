@@ -63,7 +63,7 @@ namespace Hyades
         VkDebugUtilsMessengerEXT m_debug_messenger;
         VkSurfaceKHR m_surface;
         VkPhysicalDevice m_physical_device{VK_NULL_HANDLE};
-        VkDevice m_device;
+        
 
         VkQueue m_graphics_queue;
         VkQueue m_present_queue;
@@ -100,6 +100,8 @@ namespace Hyades
     public:
         RenderContext(GLFWwindow *window);
         ~RenderContext();
+
+        VkDevice m_device;
 
         void init();
         void destroy();

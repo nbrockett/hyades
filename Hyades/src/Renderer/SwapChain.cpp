@@ -181,10 +181,7 @@ namespace Hyades
     void SwapChain::clean()
     {
 
-        for (auto framebuffer : m_framebuffers) 
-        {
-            vkDestroyFramebuffer(m_device, framebuffer, nullptr);
-        }
+        
 
         for (auto imageview : m_imageviews) 
         {
