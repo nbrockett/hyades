@@ -141,8 +141,8 @@ namespace Hyades
         }
 
         vkGetSwapchainImagesKHR(device, swapChain, &imageCount, nullptr);
-        m_swapchain_images.resize(imageCount);
-        vkGetSwapchainImagesKHR(device, swapChain, &imageCount, m_swapchain_images.data());
+        m_images.resize(imageCount);
+        vkGetSwapchainImagesKHR(device, swapChain, &imageCount, m_images.data());
 
         swapChainImageFormat = surfaceFormat.format;
         swapChainExtent = extent;
@@ -152,13 +152,13 @@ namespace Hyades
 
     void SwapChain::create_image_views() 
     {
-        m_swapchain_imageviews.resize(m_swapchain_images.size());
+        m_imageviews.resize(m_images.size());
 
-        for (size_t i = 0; i < m_swapchain_images.size(); i++) 
+        for (size_t i = 0; i < m_images.size(); i++) 
         {
             VkImageViewCreateInfo createInfo{};
             createInfo.sType = VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO;
-            createInfo.image = m_swapchain_images[i];
+            createInfo.image = m_images[i];
             createInfo.viewType = VK_IMAGE_VIEW_TYPE_2D;
             createInfo.format = swapChainImageFormat;
             createInfo.components.r = VK_COMPONENT_SWIZZLE_IDENTITY;
@@ -171,7 +171,7 @@ namespace Hyades
             createInfo.subresourceRange.baseArrayLayer = 0;
             createInfo.subresourceRange.layerCount = 1;
 
-            if (vkCreateImageView(m_device, &createInfo, nullptr, &m_swapchain_imageviews[i]) != VK_SUCCESS) 
+            if (vkCreateImageView(m_device, &createInfo, nullptr, &m_imageviews[i]) != VK_SUCCESS) 
             {
                 throw std::runtime_error("failed to create image views!");
             }
@@ -181,24 +181,32 @@ namespace Hyades
     void SwapChain::clean()
     {
 
-        for (auto framebuffer : m_swapchain_framebuffers) {
+        for (auto framebuffer : m_framebuffers) 
+        {
             vkDestroyFramebuffer(m_device, framebuffer, nullptr);
         }
 
-        for (auto imageview : m_swapchain_imageviews) {
-            vkDestroyImageView(m_device, imageview, nullptr);
+        for (auto imageview : m_imageviews) 
+        {
+            if (imageview != VK_NULL_HANDLE)
+            {
+                vkDestroyImageView(m_device, imageview, nullptr);
+            }
         }
-
-        vkDestroySwapchainKHR(m_device, swapChain, nullptr);
+        
+        if (swapChain != VK_NULL_HANDLE)
+        {
+            vkDestroySwapchainKHR(m_device, swapChain, nullptr);
+        }
     }
 
     void SwapChain::create_framebuffers(const VkRenderPass& render_pass) 
     {
-        m_swapchain_framebuffers.resize(m_swapchain_imageviews.size());
+        m_framebuffers.resize(m_imageviews.size());
 
-        for (size_t i = 0; i < m_swapchain_imageviews.size(); i++) 
+        for (size_t i = 0; i < m_imageviews.size(); i++) 
         {
-            VkImageView attachments[] = { m_swapchain_imageviews[i] };
+            VkImageView attachments[] = { m_imageviews[i] };
 
             VkFramebufferCreateInfo framebufferInfo{};
             framebufferInfo.sType = VK_STRUCTURE_TYPE_FRAMEBUFFER_CREATE_INFO;
@@ -209,7 +217,7 @@ namespace Hyades
             framebufferInfo.height = swapChainExtent.height;
             framebufferInfo.layers = 1;
 
-            if (vkCreateFramebuffer(m_device, &framebufferInfo, nullptr, &m_swapchain_framebuffers[i]) != VK_SUCCESS) {
+            if (vkCreateFramebuffer(m_device, &framebufferInfo, nullptr, &m_framebuffers[i]) != VK_SUCCESS) {
                 throw std::runtime_error("failed to create framebuffer!");
             }
         }
