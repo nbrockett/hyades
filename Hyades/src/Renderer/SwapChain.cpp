@@ -70,24 +70,29 @@ namespace Hyades
     {
 
         // return capabilities.currentExtent;
-        // if (capabilities.currentExtent.width != UINT32_MAX)
-        // {
-        //     return capabilities.currentExtent;
-        // }
-        // else
-        // {
-        int width, height;
-        glfwGetFramebufferSize(m_window, &width, &height);
+        if (capabilities.currentExtent.width != UINT32_MAX)
+        {
+            Hyades::Logger::s_logger->error(std::string("Current width extent: ") + std::to_string(capabilities.currentExtent.width));
+            Hyades::Logger::s_logger->error(std::string("Current height extent: ") + std::to_string(capabilities.currentExtent.height));
+            return capabilities.currentExtent;
+        }
+        else
+        {
+            int width, height;
+            glfwGetFramebufferSize(m_window, &width, &height);
 
-        VkExtent2D actualExtent = {
-            static_cast<uint32_t>(width),
-            static_cast<uint32_t>(height)};
+            VkExtent2D actualExtent = {
+                static_cast<uint32_t>(width),
+                static_cast<uint32_t>(height)};
 
-        actualExtent.width = std::max(capabilities.minImageExtent.width, std::min(capabilities.maxImageExtent.width, actualExtent.width));
-        actualExtent.height = std::max(capabilities.minImageExtent.height, std::min(capabilities.maxImageExtent.height, actualExtent.height));
+            actualExtent.width = std::max(capabilities.minImageExtent.width, std::min(capabilities.maxImageExtent.width, actualExtent.width));
+            actualExtent.height = std::max(capabilities.minImageExtent.height, std::min(capabilities.maxImageExtent.height, actualExtent.height));
 
-        return actualExtent;
-        // }
+            Hyades::Logger::s_logger->error(std::string("ELSE: Actual width extent: ") + std::to_string(actualExtent.width));
+            Hyades::Logger::s_logger->error(std::string("ELSE: Actual height extent: ") + std::to_string(actualExtent.height));
+
+            return actualExtent;
+        }
     }
 
     void SwapChain::create(VkPhysicalDevice physical_device, QueueFamilyIndices indices, VkDevice device)
@@ -180,15 +185,13 @@ namespace Hyades
 
     void SwapChain::clean()
     {
-
-        
-
         for (auto imageview : m_imageviews) 
         {
-            if (imageview != VK_NULL_HANDLE)
-            {
-                vkDestroyImageView(m_device, imageview, nullptr);
-            }
+            vkDestroyImageView(m_device, imageview, nullptr);
+            // if (imageview != VK_NULL_HANDLE)
+            // {
+            //     vkDestroyImageView(m_device, imageview, nullptr);
+            // }
         }
         
         if (swapChain != VK_NULL_HANDLE)

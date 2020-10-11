@@ -13,6 +13,7 @@ namespace Hyades
 
     const int MAX_FRAMES_IN_FLIGHT = 2;
     size_t currentFrame = 0;
+    bool framebufferResized = false;
 
     VkResult create_debug_messenger(VkInstance instance, const VkDebugUtilsMessengerCreateInfoEXT *pCreateInfo, const VkAllocationCallbacks *pAllocator, VkDebugUtilsMessengerEXT *pDebugMessenger)
     {
@@ -63,11 +64,15 @@ namespace Hyades
     }
 
     RenderContext::RenderContext(GLFWwindow *window) : m_window(window), swapChain(m_surface, window)
-    {
-    }
+    {   }
 
     RenderContext::~RenderContext()
+    {   }
+
+    void RenderContext::on_window_resize(u_int32_t width, uint32_t height)
     {
+        Logger::s_logger->info("resizing render context..");
+        framebufferResized = true;
     }
 
     void RenderContext::destroy()
@@ -79,15 +84,12 @@ namespace Hyades
             vkDestroyFramebuffer(m_device, framebuffer, nullptr);
         }
 
-        swapChain.clean();
-
         vkFreeCommandBuffers(m_device, commandPool, static_cast<uint32_t>(commandBuffers.size()), commandBuffers.data());
-
         vkDestroyPipeline(m_device, graphicsPipeline, nullptr);
         vkDestroyPipelineLayout(m_device, pipelineLayout, nullptr);
         vkDestroyRenderPass(m_device, renderPass, nullptr);
-        
-        
+
+        swapChain.clean();
 
         for (size_t i = 0; i < MAX_FRAMES_IN_FLIGHT; i++) {
             vkDestroySemaphore(m_device, renderFinishedSemaphores[i], nullptr);
@@ -109,8 +111,39 @@ namespace Hyades
         vkDestroyInstance(m_vk_instance, nullptr);
     }
 
-    void RenderContext::on_window_resize(u_int32_t width, uint32_t height)
+    void RenderContext::recreateSwapChain() 
     {
+        Hyades::Logger::s_logger->error("Recreating swap chain!");
+
+        int width = 0, height = 0;
+        glfwGetFramebufferSize(m_window, &width, &height);
+        while (width == 0 || height == 0) 
+        {
+            glfwGetFramebufferSize(m_window, &width, &height);
+            glfwWaitEvents();
+        }
+
+        vkDeviceWaitIdle(m_device);
+
+        // clean swap chain
+        for (auto framebuffer : swapChain.m_framebuffers) 
+        {
+            vkDestroyFramebuffer(m_device, framebuffer, nullptr);
+        }
+        vkFreeCommandBuffers(m_device, commandPool, static_cast<uint32_t>(commandBuffers.size()), commandBuffers.data());
+        vkDestroyPipeline(m_device, graphicsPipeline, nullptr);
+        vkDestroyPipelineLayout(m_device, pipelineLayout, nullptr);
+        vkDestroyRenderPass(m_device, renderPass, nullptr);
+
+        swapChain.clean();
+
+        // create swap chain
+        create_swap_chain();
+        // swapChain.create_image_views();
+        create_render_pass();
+        create_graphics_pipeline();
+        swapChain.create_framebuffers(renderPass);
+        create_command_buffers();
     }
 
     void RenderContext::render()
@@ -127,6 +160,7 @@ namespace Hyades
         choose_physical_device();
         create_logical_device();
         create_swap_chain();
+        // swapChain.create_image_views();
 
         create_render_pass();
         create_graphics_pipeline();
@@ -711,26 +745,6 @@ namespace Hyades
         }
     }
 
-    void RenderContext::recreateSwapChain() {
-        int width = 0, height = 0;
-        glfwGetFramebufferSize(m_window, &width, &height);
-        while (width == 0 || height == 0) {
-            glfwGetFramebufferSize(m_window, &width, &height);
-            glfwWaitEvents();
-        }
-
-        vkDeviceWaitIdle(m_device);
-
-        swapChain.clean();
-
-        create_swap_chain();
-        swapChain.create_image_views();
-        create_render_pass();
-        create_graphics_pipeline();
-        swapChain.create_framebuffers(renderPass);
-        create_command_buffers();
-    }
-
     void RenderContext::drawFrame() 
     {
         vkWaitForFences(m_device, 1, &inFlightFences[currentFrame], VK_TRUE, UINT64_MAX);
@@ -738,7 +752,8 @@ namespace Hyades
         uint32_t imageIndex;
         VkResult result = vkAcquireNextImageKHR(m_device, swapChain.swapChain, UINT64_MAX, imageAvailableSemaphores[currentFrame], VK_NULL_HANDLE, &imageIndex);
 
-        if (result == VK_ERROR_OUT_OF_DATE_KHR) {
+        if (result == VK_ERROR_OUT_OF_DATE_KHR) 
+        {
             recreateSwapChain();
             return;
         } else if (result != VK_SUCCESS && result != VK_SUBOPTIMAL_KHR) {
@@ -786,9 +801,9 @@ namespace Hyades
 
         result = vkQueuePresentKHR(m_present_queue, &presentInfo);
 
-        // if (result == VK_ERROR_OUT_OF_DATE_KHR || result == VK_SUBOPTIMAL_KHR || framebufferResized) {
-        if (result == VK_ERROR_OUT_OF_DATE_KHR || result == VK_SUBOPTIMAL_KHR) {
-            // framebufferResized = false;
+        if (result == VK_ERROR_OUT_OF_DATE_KHR || result == VK_SUBOPTIMAL_KHR || framebufferResized) {
+        // if (result == VK_ERROR_OUT_OF_DATE_KHR || result == VK_SUBOPTIMAL_KHR) {
+            framebufferResized = false;
             recreateSwapChain();
         } else if (result != VK_SUCCESS) {
             throw std::runtime_error("failed to present swap chain image!");

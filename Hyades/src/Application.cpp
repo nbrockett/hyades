@@ -46,7 +46,6 @@ namespace Hyades
     void Application::on_window_resize(const WindowResizeEvent& event)
     {
         Hyades::Logger::s_logger->info("Resize event triggered..");
-
         // m_render_context.on_window_resize(event.width(), event.height());
     }
 

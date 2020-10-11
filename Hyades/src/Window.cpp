@@ -67,6 +67,8 @@ namespace Hyades
         win->width() = width;
         win->height() = height;
 
+        win->m_render_context->on_window_resize(width, height);
+
         WindowResizeEvent event(width, height);
         win->m_event_handler->trigger(event);
     }
