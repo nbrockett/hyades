@@ -104,11 +104,11 @@ namespace Hyades
         // destroy vulkan debug messenger
         if (use_validation_layers)
         {
-            destroy_debug_messenger(m_vk_instance, m_debug_messenger, nullptr);
+            destroy_debug_messenger(m_instance, m_debug_messenger, nullptr);
         }
 
-        vkDestroySurfaceKHR(m_vk_instance, m_surface, nullptr);
-        vkDestroyInstance(m_vk_instance, nullptr);
+        vkDestroySurfaceKHR(m_instance, m_surface, nullptr);
+        vkDestroyInstance(m_instance, nullptr);
     }
 
     void RenderContext::recreateSwapChain() 
@@ -209,8 +209,7 @@ namespace Hyades
         }
 
         // Application Info
-        VkApplicationInfo vk_app_info{};
-        vk_app_info.sType = VK_STRUCTURE_TYPE_APPLICATION_INFO;
+        vk::ApplicationInfo vk_app_info;
         vk_app_info.pApplicationName = "Hyades App";
         vk_app_info.applicationVersion = VK_MAKE_VERSION(1, 0, 0);
         vk_app_info.pEngineName = "Hyades";
@@ -218,8 +217,7 @@ namespace Hyades
         vk_app_info.apiVersion = VK_API_VERSION_1_0;
 
         // Instance Info
-        VkInstanceCreateInfo vk_instance_info{};
-        vk_instance_info.sType = VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO;
+        vk::InstanceCreateInfo vk_instance_info;
         vk_instance_info.pApplicationInfo = &vk_app_info;
 
         auto extensions = RenderContext::get_required_extensions();
@@ -243,15 +241,13 @@ namespace Hyades
             vk_instance_info.pNext = nullptr;
         }
 
-        if (vkCreateInstance(&vk_instance_info, nullptr, &m_vk_instance) != VK_SUCCESS)
-        {
-            throw std::runtime_error("failed to create instance!");
-        }
+        m_instance = vk::createInstance(vk_instance_info);
+
     }
 
     void RenderContext::create_surface()
     {
-        VkResult result = glfwCreateWindowSurface(m_vk_instance, m_window, nullptr, &m_surface);
+        VkResult result = glfwCreateWindowSurface(m_instance, m_window, nullptr, &m_surface);
         if (result != VK_SUCCESS)
         {
             Hyades::Logger::s_logger->critical(result);
@@ -333,7 +329,7 @@ namespace Hyades
     void RenderContext::choose_physical_device()
     {
         uint32_t n_devices = 0;
-        vkEnumeratePhysicalDevices(m_vk_instance, &n_devices, nullptr);
+        vkEnumeratePhysicalDevices(m_instance, &n_devices, nullptr);
 
         if (n_devices == 0)
         {
@@ -341,7 +337,7 @@ namespace Hyades
         }
 
         std::vector<VkPhysicalDevice> devices(n_devices);
-        vkEnumeratePhysicalDevices(m_vk_instance, &n_devices, devices.data());
+        vkEnumeratePhysicalDevices(m_instance, &n_devices, devices.data());
 
         // choose first, suitable device
         for (const auto &device : devices)
@@ -450,7 +446,7 @@ namespace Hyades
         populate_debug_info(debug_info);
 
         // bind vulkan debug callback
-        if (create_debug_messenger(m_vk_instance, &debug_info, nullptr, &m_debug_messenger) != VK_SUCCESS)
+        if (create_debug_messenger(m_instance, &debug_info, nullptr, &m_debug_messenger) != VK_SUCCESS)
         {
             throw std::runtime_error("failed to set up debug messenger!");
         }

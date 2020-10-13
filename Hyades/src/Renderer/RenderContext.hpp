@@ -8,6 +8,7 @@
 #include "Renderer.hpp"
 #define GLFW_INCLUDE_VULKAN
 #include <vulkan/vulkan.h>
+#include <vulkan/vulkan.hpp>
 #include "GLFW/glfw3.h"
 #include "SwapChain.hpp"
 // #include "../Window.hpp"
@@ -59,7 +60,8 @@ namespace Hyades
     class RenderContext
     {
     private:
-        VkInstance m_vk_instance;
+        // VkInstance m_vk_instance;
+        vk::Instance m_instance;
         VkDebugUtilsMessengerEXT m_debug_messenger;
         VkSurfaceKHR m_surface;
         VkPhysicalDevice m_physical_device{VK_NULL_HANDLE};
