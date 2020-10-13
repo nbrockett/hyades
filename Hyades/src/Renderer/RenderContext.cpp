@@ -255,11 +255,15 @@ namespace Hyades
         }
     }
 
-    bool RenderContext::is_device_suitable(VkPhysicalDevice device)
+    bool RenderContext::is_device_suitable(vk::PhysicalDevice device)
     {
-        QueueFamilyIndices indices = find_queue_families(device);
 
+        vk::PhysicalDeviceProperties device_properties = device.getProperties();
+        vk::PhysicalDeviceFeatures device_features = device.getFeatures();
+        
         bool extensionsSupported = check_device_extension_support(device);
+
+        QueueFamilyIndices indices = find_queue_families(device);
 
         bool swapChainAdequate = false;
         if (extensionsSupported)
@@ -271,17 +275,13 @@ namespace Hyades
         return indices.is_complete() && extensionsSupported && swapChainAdequate;
     }
 
-    bool RenderContext::check_device_extension_support(VkPhysicalDevice device)
+    bool RenderContext::check_device_extension_support(vk::PhysicalDevice device)
     {
-        uint32_t extensionCount;
-        vkEnumerateDeviceExtensionProperties(device, nullptr, &extensionCount, nullptr);
-
-        std::vector<VkExtensionProperties> availableExtensions(extensionCount);
-        vkEnumerateDeviceExtensionProperties(device, nullptr, &extensionCount, availableExtensions.data());
-
+        std::vector<vk::ExtensionProperties> available_extension_properties = device.enumerateDeviceExtensionProperties();
+        
         std::set<std::string> requiredExtensions(deviceExtensions.begin(), deviceExtensions.end());
 
-        for (const auto &extension : availableExtensions)
+        for (const auto &extension : available_extension_properties)
         {
             requiredExtensions.erase(extension.extensionName);
         }
@@ -342,6 +342,11 @@ namespace Hyades
                 m_physical_device = device;
                 break;
             }
+        }
+
+        if (!m_physical_device)
+        {
+            throw std::runtime_error("Failed to find suitable GPU");
         }
     }
 

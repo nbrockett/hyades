@@ -8,7 +8,7 @@
 #include "Renderer.hpp"
 #define GLFW_INCLUDE_VULKAN
 #include <vulkan/vulkan.h>
-#include <vulkan/vulkan.hpp>
+
 #include "GLFW/glfw3.h"
 #include "SwapChain.hpp"
 // #include "../Window.hpp"
@@ -16,25 +16,6 @@
 #include <fstream>
 namespace Hyades
 {
-
-    // struct SwapChainSupportDetails
-    // {
-    //     VkSurfaceCapabilitiesKHR capabilities;
-    //     std::vector<VkSurfaceFormatKHR> formats;
-    //     std::vector<VkPresentModeKHR> presentModes;
-    // };
-
-    // struct QueueFamilyIndices
-    // {
-    //     std::optional<uint32_t> graphics_family;
-    //     std::optional<uint32_t> present_family;
-
-    //     bool is_complete()
-    //     {
-    //         return graphics_family.has_value() && present_family.has_value();
-    //     }
-    // };
-
 
     static std::vector<char> readFile(const std::string& filename) 
     {
@@ -91,10 +72,12 @@ namespace Hyades
         const bool use_validation_layers = true;
 
         const std::vector<const char *> validationLayers = {
-            "VK_LAYER_KHRONOS_validation"};
+            "VK_LAYER_KHRONOS_validation"
+        };
 
         const std::vector<const char *> deviceExtensions = {
-            VK_KHR_SWAPCHAIN_EXTENSION_NAME};
+            VK_KHR_SWAPCHAIN_EXTENSION_NAME
+        };
 
         VulkanRenderer m_renderer = VulkanRenderer();
 
@@ -124,10 +107,9 @@ namespace Hyades
 
         void drawFrame();
 
-        bool is_device_suitable(VkPhysicalDevice device);
-        bool check_device_extension_support(VkPhysicalDevice device);
+        bool is_device_suitable(vk::PhysicalDevice device);
+        bool check_device_extension_support(vk::PhysicalDevice device);
         QueueFamilyIndices find_queue_families(VkPhysicalDevice device);
-        // SwapChainSupportDetails query_swap_chain_support(VkPhysicalDevice device);
 
         VkShaderModule createShaderModule(const std::vector<char>& code);
 
