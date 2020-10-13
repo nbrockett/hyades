@@ -60,12 +60,13 @@ namespace Hyades
     class RenderContext
     {
     private:
-        // VkInstance m_vk_instance;
+
         vk::Instance m_instance;
         VkDebugUtilsMessengerEXT m_debug_messenger;
         VkSurfaceKHR m_surface;
-        VkPhysicalDevice m_physical_device{VK_NULL_HANDLE};
         
+        vk::PhysicalDevice m_physical_device;
+        std::vector<vk::PhysicalDevice> m_physical_devices;
 
         VkQueue m_graphics_queue;
         VkQueue m_present_queue;

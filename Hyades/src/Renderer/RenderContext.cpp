@@ -328,31 +328,20 @@ namespace Hyades
 
     void RenderContext::choose_physical_device()
     {
-        uint32_t n_devices = 0;
-        vkEnumeratePhysicalDevices(m_instance, &n_devices, nullptr);
+        m_physical_devices = m_instance.enumeratePhysicalDevices();
 
-        if (n_devices == 0)
+        if (m_physical_devices.size() == 0)
         {
             throw std::runtime_error("Failed to find any GPUs with Vulkan support");
         }
 
-        std::vector<VkPhysicalDevice> devices(n_devices);
-        vkEnumeratePhysicalDevices(m_instance, &n_devices, devices.data());
-
-        // choose first, suitable device
-        for (const auto &device : devices)
+        for (const auto &device : m_physical_devices)
         {
             if (is_device_suitable(device))
             {
                 m_physical_device = device;
                 break;
             }
-        }
-
-        // else no device is suitable
-        if (m_physical_device == VK_NULL_HANDLE)
-        {
-            throw std::runtime_error("Failed to find suitable GPU");
         }
     }
 
